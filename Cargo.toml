@@ -1,0 +1,40 @@
+[package]
+name = "bias-cli"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+description = "Command-line interface for the Bias payments API"
+license = "MIT"
+publish = false
+
+[[bin]]
+name = "bias"
+path = "src/main.rs"
+
+[dependencies]
+base64 = "0.23"
+getrandom = "0.4"
+gethostname = "1"
+reqwest = { version = "0.13", default-features = false, features = [
+    "blocking",
+    "form",
+    "json",
+    "multipart",
+    "query",
+    "rustls-no-provider",
+] }
+# ring rather than reqwest's default aws-lc-rs, which spends ~25ms setting itself up on the
+# first handshake of every run.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.11"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = "s"

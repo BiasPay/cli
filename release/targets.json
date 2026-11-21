@@ -1,0 +1,7 @@
+{
+    "aarch64-apple-darwin": { "os": "darwin", "cpu": "arm64" },
+    "x86_64-apple-darwin": { "os": "darwin", "cpu": "x64" },
+    "aarch64-unknown-linux-musl": { "os": "linux", "cpu": "arm64" },
+    "x86_64-unknown-linux-musl": { "os": "linux", "cpu": "x64" },
+    "x86_64-pc-windows-msvc": { "os": "win32", "cpu": "x64" }
+}
