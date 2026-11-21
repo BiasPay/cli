@@ -682,12 +682,16 @@ fn looks_like_body(word: &str) -> bool {
 }
 
 /// Whether `--flag next` means `next` is the flag's value. A boolean takes only `true` or
-/// `false`, so `--expand.customer cus_123` leaves the ID positional.
+/// `false` (or an object), so `--expand.customer cus_123` leaves the ID positional. A value that
+/// may also be text, such as a metadata value, takes the next word whatever it is.
 fn takes_next(schema: Option<&Value>, next: &str) -> bool {
     match schema {
         Some(s) => {
             let kinds = manifest::kinds(s);
-            if kinds.contains(&"boolean") {
+            let text = kinds
+                .iter()
+                .any(|kind| matches!(*kind, "string" | "number" | "integer"));
+            if kinds.contains(&"boolean") && !text {
                 matches!(next, "true" | "false") || next.starts_with('{')
             } else {
                 true
@@ -1351,6 +1355,17 @@ mod tests {
         let (path, params) = parse("payments get --expand.customer pay_1").unwrap();
         assert_eq!(path, "/v1/payments/pay_1");
         assert_eq!(params, serde_json::json!({"expand": {"customer": true}}));
+    }
+
+    #[test]
+    fn a_value_that_may_be_a_boolean_or_a_string_takes_the_next_word() {
+        let (_, params) =
+            parse("customers update cus_1 --metadata.internal_id 0d234c20 --metadata.vip true")
+                .unwrap();
+        assert_eq!(
+            params,
+            serde_json::json!({"metadata": {"internal_id": "0d234c20", "vip": true}})
+        );
     }
 
     #[test]
