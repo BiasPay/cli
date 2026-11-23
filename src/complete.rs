@@ -1,9 +1,7 @@
 //! Shell completion. Each shell's script calls `bias __complete <shell> -- <words…>`, the last
 //! word being the one under the cursor, and gets back `candidate<TAB>description` lines.
 
-use crate::cli::{
-    AUTH_COMMANDS, BUILTINS, GLOBAL_FLAGS, RAW_METHODS, Resolved, Token, resolve, tokenize,
-};
+use crate::cli::{AUTH_COMMANDS, BUILTINS, GLOBAL_FLAGS, Resolved, Token, resolve, tokenize};
 use crate::config;
 use crate::error::CliError;
 use crate::manifest::{self, Operation, manifest};
@@ -265,11 +263,6 @@ fn next_words(prefix: &[String], current: &str) -> Vec<(String, String)> {
             BUILTINS
                 .iter()
                 .map(|(n, d)| ((*n).to_owned(), (*d).to_owned())),
-        );
-        out.extend(
-            RAW_METHODS
-                .iter()
-                .map(|m| ((*m).to_owned(), "Send a request to a path".to_owned())),
         );
     }
     for op in &manifest().operations {

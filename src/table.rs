@@ -131,8 +131,7 @@ pub fn list_items(value: &Value) -> Option<&Vec<Value>> {
     }
 }
 
-/// Columns for objects with no manifest defaults, such as a raw request's: the same rule the
-/// generator uses.
+/// Columns for objects with no manifest defaults: the same rule the generator uses.
 pub fn guess_columns(sample: &Value) -> Vec<Field> {
     let Some(map) = sample.as_object() else {
         return Vec::new();

@@ -95,7 +95,7 @@ pub enum Input {
     Text(String),
 }
 
-/// Accumulates parameters. `schema` is `None` for raw requests, which type values by their look.
+/// Accumulates parameters. Where `schema` is `None`, values are typed by their look.
 pub struct Params<'a> {
     pub root: Map<String, Value>,
     schema: Option<&'a Value>,

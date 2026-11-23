@@ -203,7 +203,6 @@ pub enum Resolved<'m> {
     Operation(&'m Operation),
     /// The start of several commands, such as `customers`.
     Group(Vec<String>),
-    Raw(&'static str),
     Unknown(String),
 }
 
@@ -238,8 +237,6 @@ pub const AUTH_COMMANDS: &[(&str, &str)] = &[
     ),
 ];
 
-pub const RAW_METHODS: &[&str] = &["get", "post", "patch", "put", "delete"];
-
 fn normalize(word: &str) -> String {
     let word = word.replace('_', "-").to_lowercase();
     if word == "retrieve" {
@@ -259,11 +256,6 @@ pub fn resolve(words: &[String]) -> (Resolved<'static>, usize) {
     }
     if first == "whoami" {
         return (Resolved::Builtin("whoami"), 1);
-    }
-    if let Some(method) = RAW_METHODS.iter().find(|m| **m == first.as_str())
-        && words.get(1).is_some_and(|w| w.starts_with('/'))
-    {
-        return (Resolved::Raw(method), 1);
     }
 
     let normalized: Vec<String> = words.iter().map(|w| normalize(w)).collect();
@@ -347,7 +339,6 @@ pub fn run(args: Vec<String>) -> Result<(), CliError> {
         }
         Resolved::Builtin("listen") => listen(&globals, rest),
         Resolved::Builtin(other) => unreachable!("builtin {other}"),
-        Resolved::Raw(method) => raw(&globals, method, rest),
         Resolved::Operation(op) => operation(&globals, op, rest),
         Resolved::Group(prefix) => match words(rest).first() {
             None => {
@@ -723,18 +714,13 @@ fn query_value(value: &Value) -> Option<String> {
 }
 
 fn split_params(
-    op: Option<&Operation>,
-    method: &str,
+    op: &Operation,
     params: Map<String, Value>,
 ) -> (Vec<(String, String)>, Map<String, Value>) {
     let mut query = Vec::new();
     let mut body = Map::new();
     for (key, value) in params {
-        let in_query = match op {
-            Some(op) => op.is_query_param(&key) || op.body.is_none(),
-            None => method == "GET" || method == "DELETE",
-        };
-        if in_query {
+        if op.is_query_param(&key) || op.body.is_none() {
             if let Some(v) = query_value(&value) {
                 query.push((key, v));
             }
@@ -776,7 +762,14 @@ fn operation(globals: &Globals, op: &Operation, rest: &[Token]) -> Result<(), Cl
             op.command.join(" ")
         )));
     }
-    let (query, body) = split_params(Some(op), &op.method, parsed.params);
+    let (mut query, body) = split_params(op, parsed.params);
+    // `--all` asks for the largest pages the list allows, unless `--limit` says otherwise.
+    if globals.all && !query.iter().any(|(k, _)| k == "limit") {
+        let maximum = op.query.iter().find(|p| p.name == "limit");
+        if let Some(maximum) = maximum.and_then(|p| p.schema.get("maximum")?.as_u64()) {
+            query.push(("limit".into(), maximum.to_string()));
+        }
+    }
     let payload = if op.is_multipart() {
         multipart(body)
     } else if op.body.is_some()
@@ -806,81 +799,6 @@ fn operation(globals: &Globals, op: &Operation, rest: &[Token]) -> Result<(), Cl
         op.response,
         op.columns.as_deref().unwrap_or_default(),
     )
-}
-
-fn raw(globals: &Globals, method: &str, rest: &[Token]) -> Result<(), CliError> {
-    let mut params = Params::new(None);
-    let mut positionals = Vec::new();
-    let mut flags = Vec::new();
-    let mut i = 0;
-    while i < rest.len() {
-        match &rest[i] {
-            Token::Word(w) => positionals.push(w.clone()),
-            Token::Flag { name, value } => {
-                let input = match value {
-                    Some(v) => Input::Text(v.clone()),
-                    None => match rest.get(i + 1) {
-                        Some(Token::Word(_)) if positionals.is_empty() => Input::Present,
-                        Some(Token::Word(next)) => {
-                            i += 1;
-                            Input::Text(next.clone())
-                        }
-                        _ => Input::Present,
-                    },
-                };
-                flags.push((name.clone(), input));
-            }
-        }
-        i += 1;
-    }
-    let mut positionals = positionals.into_iter();
-    let path = positionals.next().expect("resolve checked the path");
-    let path = if path.starts_with("/v1/") || path == "/v1" {
-        path
-    } else {
-        format!("/v1{path}")
-    };
-    if let Some(body) = positionals.next() {
-        params
-            .merge(params::parse_body(&body).map_err(CliError::Usage)?)
-            .map_err(CliError::Usage)?;
-    }
-    if let Some(extra) = positionals.next() {
-        return Err(CliError::Usage(format!("unexpected argument `{extra}`")));
-    }
-    for (name, input) in flags {
-        params.set(&name, input).map_err(CliError::Usage)?;
-    }
-    let method = method.to_uppercase();
-    let (query, body) = split_params(None, &method, params.root);
-    let payload = if body.is_empty() {
-        Payload::None
-    } else {
-        Payload::Json(Value::Object(body))
-    };
-    let idempotency_key =
-        (method == "POST" || method == "PATCH" || method == "PUT" || method == "DELETE").then(
-            || {
-                globals
-                    .idempotency_key
-                    .clone()
-                    .unwrap_or_else(|| client::random_token(18))
-            },
-        );
-    let request = Request {
-        method: &method,
-        path: &path,
-        query: &query,
-        payload: &payload,
-        idempotency_key: idempotency_key.as_deref(),
-        stream: globals.follow,
-    };
-    let kind = if globals.all {
-        ResponseKind::List
-    } else {
-        ResponseKind::Json
-    };
-    send(globals, request, kind, &[])
 }
 
 /// Prints responses as JSON, narrowed JSON (`--fields`) or a table (`--table`).
@@ -1220,7 +1138,7 @@ fn listen(globals: &Globals, rest: &[Token]) -> Result<(), CliError> {
         }
     }
     let parsed = parse_inputs(op, &tokens)?;
-    let (mut query, _) = split_params(Some(op), "GET", parsed.params);
+    let (mut query, _) = split_params(op, parsed.params);
     query.push(("stream".into(), "true".into()));
     let mut client = client(globals)?;
     let style = Style::stdout(globals.compact);
@@ -1311,7 +1229,6 @@ mod tests {
             Resolved::Operation(op) => op.command.join(" "),
             Resolved::Group(words) => format!("group {}", words.join(" ")),
             Resolved::Builtin(b) => format!("builtin {b}"),
-            Resolved::Raw(m) => format!("raw {m}"),
             Resolved::Unknown(w) => format!("unknown {w}"),
         };
         assert_eq!(names("customers create"), "customers create");
@@ -1325,7 +1242,7 @@ mod tests {
             names("checkout-sessions discount-code"),
             "group checkout-sessions discount-code"
         );
-        assert_eq!(names("get /v1/customers"), "raw get");
+        assert_eq!(names("get /v1/customers"), "unknown get");
         assert_eq!(names("login"), "builtin login");
         assert_eq!(names("nope"), "unknown nope");
     }

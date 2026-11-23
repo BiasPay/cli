@@ -29,7 +29,7 @@ pub fn topic(words: &[String]) -> Result<(), CliError> {
         Resolved::Builtin("login") => login(),
         Resolved::Builtin("listen") => listen(),
         Resolved::Builtin("completion") => completion(),
-        Resolved::Raw(_) | Resolved::Builtin(_) => root(),
+        Resolved::Builtin(_) => root(),
         Resolved::Unknown(word) => {
             return Err(CliError::Usage(format!("no help for `{word}`")));
         }
@@ -92,7 +92,6 @@ fn root() {
             .map(|(n, d)| ((*n).to_owned(), (*d).to_owned()))
             .collect::<Vec<_>>(),
     );
-    println!("  get|post|patch|delete <path>  Send any request, such as `bias get /v1/customers`");
     println!("\n{}", heading("Resources"));
     let mut resources: BTreeMap<&str, usize> = BTreeMap::new();
     for op in &manifest().operations {

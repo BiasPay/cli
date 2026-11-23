@@ -72,6 +72,11 @@ bias login                                       # or --device, --read-only, --p
 | `table.rs`    | `--table` rows and columns, and `--fields` picking                              |
 | `help.rs`     | Help text from the manifest                                                     |
 
+`packages/internal-shared/src/cli` is the TypeScript port of the parsing, completion, help and table
+rules (`cli.rs`, `params.rs`, `loose.rs`, `manifest.rs`, `complete.rs`, `table.rs`, `help.rs`) that
+the dashboard console runs against the same `manifest.json`. A change to those rules here needs the
+same change there, with its test.
+
 The server side is `packages/backend/src/ops/oauth` and `src/api/routes/oauth` (token, device and
 revoke endpoints), with the consent pages at `/oauth/authorize` and `/device` in the dashboard. Each
 sign-in is a grant backed by its own API key, so requests log against it and deleting the key signs
