@@ -81,7 +81,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -92,7 +92,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -260,7 +260,7 @@
           "type": "object",
           "properties": {
            "price": {
-            "description": "The ID of the price to use for this line item.",
+            "description": "The catalog price to bill.",
             "type": [
              "string",
              "null"
@@ -279,7 +279,7 @@
            "quantity": {
             "type": "number",
             "maximum": 99999999999.9999,
-            "description": "The quantity of the line item."
+            "description": "The number of units billed."
            },
            "unit_of_measure": {
             "description": "The unit `quantity` counts.",
@@ -334,6 +334,7 @@
        "type": "object",
        "properties": {
         "email": {
+         "description": "The customer's email address.",
          "anyOf": [
           {
            "type": "string",
@@ -345,12 +346,14 @@
          ]
         },
         "name": {
+         "description": "The customer's full name or business name.",
          "type": [
           "string",
           "null"
          ]
         },
         "phone": {
+         "description": "The customer's phone number.",
          "type": [
           "string",
           "null"
@@ -360,7 +363,7 @@
        "additionalProperties": false
       },
       "customer_reference": {
-       "description": "The customer's purchase order number, up to 25 characters.",
+       "description": "The customer's purchase order number.",
        "anyOf": [
         {
          "type": "string"
@@ -502,16 +505,19 @@
                 "type": "object",
                 "properties": {
                  "maximum": {
+                  "description": "The longest delivery is estimated to take.",
                   "anyOf": [
                    {
                     "type": "object",
                     "properties": {
                      "unit": {
+                      "description": "The unit of `value`.",
                       "$ref": "DeliveryEstimateUnit"
                      },
                      "value": {
                       "type": "integer",
-                      "minimum": 0
+                      "minimum": 0,
+                      "description": "The number of `unit`s."
                      }
                     },
                     "required": [
@@ -526,16 +532,19 @@
                   ]
                  },
                  "minimum": {
+                  "description": "The shortest delivery is estimated to take.",
                   "anyOf": [
                    {
                     "type": "object",
                     "properties": {
                      "unit": {
+                      "description": "The unit of `value`.",
                       "$ref": "DeliveryEstimateUnit"
                      },
                      "value": {
                       "type": "integer",
-                      "minimum": 0
+                      "minimum": 0,
+                      "description": "The number of `unit`s."
                      }
                     },
                     "required": [
@@ -587,7 +596,7 @@
        "type": "string"
       },
       "dual_pricing": {
-       "description": "Dual pricing on a one-off invoice's session that accepts bank payments.",
+       "description": "A higher price for card payments than for bank payments.",
        "anyOf": [
         {
          "type": "object",
@@ -595,7 +604,7 @@
           "rate": {
            "type": "number",
            "maximum": 4,
-           "description": "The percentage card payments add, such as `3` for 3%."
+           "description": "The percentage added to card payments, such as `3` for 3%."
           }
          },
          "required": [
@@ -641,7 +650,7 @@
        "$ref": "SessionSubmitLabel"
       },
       "success_url": {
-       "description": "Where Bias Checkout sends the customer after the session completes.",
+       "description": "The page Bias Checkout sends the customer to after the session completes.",
        "anyOf": [
         {
          "type": "string",
@@ -653,7 +662,7 @@
        ]
       },
       "expires_at": {
-       "description": "When the session expires if it isn't completed by then, between 30 minutes and 30 days from now.",
+       "description": "When the session expires if it isn't completed.",
        "type": "integer"
       },
       "subscription_data": {
@@ -672,7 +681,7 @@
          ]
         },
         "trial_period_days": {
-         "description": "The days of free trial the subscription starts with, from when the session completes.",
+         "description": "The length of the subscription's free trial, in days.",
          "type": "integer",
          "minimum": 1,
          "maximum": 730
@@ -681,7 +690,7 @@
        "additionalProperties": false
       },
       "subscription": {
-       "description": "In `setup` mode, a subscription whose payment method the saved one replaces.",
+       "description": "The subscription to move to the payment method a `setup` session saves.",
        "type": "string"
       }
      },
@@ -708,7 +717,7 @@
    ],
    "method": "POST",
    "path": "/v1/checkout_sessions/{id}/discount_code",
-   "description": "Apply a discount code to an open checkout session.",
+   "description": "Apply a discount code to a checkout session",
    "path_params": [
     {
      "name": "id",
@@ -764,7 +773,7 @@
    ],
    "method": "DELETE",
    "path": "/v1/checkout_sessions/{id}/discount_code/{discount}",
-   "description": "Remove a discount code from an open checkout session.",
+   "description": "Remove a discount code from a checkout session",
    "path_params": [
     {
      "name": "id",
@@ -922,7 +931,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -933,7 +942,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -1053,7 +1062,7 @@
           "type": "string"
          },
          "price": {
-          "description": "The ID of the price to use for this line item.",
+          "description": "The catalog price to bill.",
           "type": [
            "string",
            "null"
@@ -1070,12 +1079,11 @@
           ]
          },
          "quantity": {
-          "description": "The quantity of the line item.",
           "anyOf": [
            {
             "type": "number",
             "maximum": 99999999999.9999,
-            "description": "The quantity of the line item."
+            "description": "The number of units billed."
            },
            {
             "type": "null"
@@ -1183,7 +1191,7 @@
        "additionalProperties": false
       },
       "customer_reference": {
-       "description": "The customer's purchase order number, up to 25 characters.",
+       "description": "The customer's purchase order number.",
        "anyOf": [
         {
          "type": "string"
@@ -1397,16 +1405,19 @@
                 "type": "object",
                 "properties": {
                  "maximum": {
+                  "description": "The longest delivery is estimated to take.",
                   "anyOf": [
                    {
                     "type": "object",
                     "properties": {
                      "unit": {
+                      "description": "The unit of `value`.",
                       "$ref": "DeliveryEstimateUnit"
                      },
                      "value": {
                       "type": "integer",
-                      "minimum": 0
+                      "minimum": 0,
+                      "description": "The number of `unit`s."
                      }
                     },
                     "required": [
@@ -1421,16 +1432,19 @@
                   ]
                  },
                  "minimum": {
+                  "description": "The shortest delivery is estimated to take.",
                   "anyOf": [
                    {
                     "type": "object",
                     "properties": {
                      "unit": {
+                      "description": "The unit of `value`.",
                       "$ref": "DeliveryEstimateUnit"
                      },
                      "value": {
                       "type": "integer",
-                      "minimum": 0
+                      "minimum": 0,
+                      "description": "The number of `unit`s."
                      }
                     },
                     "required": [
@@ -1485,7 +1499,7 @@
        ]
       },
       "dual_pricing": {
-       "description": "Dual pricing on a one-off invoice's session that accepts bank payments.",
+       "description": "A higher price for card payments than for bank payments.",
        "anyOf": [
         {
          "type": "object",
@@ -1493,7 +1507,7 @@
           "rate": {
            "type": "number",
            "maximum": 4,
-           "description": "The percentage card payments add, such as `3` for 3%."
+           "description": "The percentage added to card payments, such as `3` for 3%."
           }
          },
          "required": [
@@ -1507,7 +1521,7 @@
        ]
       },
       "metadata": {
-       "description": "Your own key-value data on the object.",
+       "description": "Arbitrary key-value data for your own use.",
        "anyOf": [
         {
          "$ref": "MetadataInput"
@@ -1558,7 +1572,7 @@
      "type": "object",
      "properties": {
       "invoice": {
-       "description": "The invoice this credit note credits.",
+       "description": "The invoice to credit.",
        "type": "string"
       },
       "line_items": {
@@ -1566,14 +1580,14 @@
        "items": {
         "$ref": "CreditNoteLineItemCreate"
        },
-       "description": "The line items for this credit note."
+       "description": "The lines to credit."
       },
       "reason": {
-       "description": "Why the credit note is issued.",
+       "default": "other",
        "$ref": "CreditNoteReason"
       },
       "refund_amount": {
-       "description": "The part to refund to the invoice's payments, newest first.",
+       "description": "The part to refund to the invoice's payments.",
        "type": "integer",
        "minimum": 0
       },
@@ -1596,10 +1610,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -1610,7 +1626,7 @@
        }
       },
       "memo": {
-       "description": "A memo shown in the credit note email.",
+       "description": "A note to the customer, shown in the credit note email.",
        "type": [
         "string",
         "null"
@@ -1724,7 +1740,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -1735,7 +1751,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -1840,7 +1856,7 @@
      "type": "object",
      "properties": {
       "line_items": {
-       "description": "The line items for this credit note.",
+       "description": "The lines to credit.",
        "type": "array",
        "items": {
         "$ref": "CreditNoteLineItemCreate"
@@ -1855,10 +1871,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -1869,7 +1887,7 @@
        }
       },
       "memo": {
-       "description": "A memo shown in the credit note email.",
+       "description": "A note to the customer, shown in the credit note email.",
        "type": [
         "string",
         "null"
@@ -1971,10 +1989,10 @@
       },
       "amount": {
        "type": "integer",
-       "description": "The change in cents: positive adds credit, negative adds an amount the customer owes."
+       "description": "The change to the balance, in cents."
       },
       "description": {
-       "description": "An internal note.",
+       "description": "A note for your own reference, not shown to the customer.",
        "anyOf": [
         {
          "type": "string"
@@ -2091,7 +2109,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -2102,7 +2120,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -2207,7 +2225,7 @@
      "type": "object",
      "properties": {
       "description": {
-       "description": "An internal note.",
+       "description": "A note for your own reference, not shown to the customer.",
        "anyOf": [
         {
          "type": "string"
@@ -2303,7 +2321,7 @@
        ]
       },
       "default_payment_method": {
-       "description": "The payment method charged for the customer's invoices and subscriptions that don't set their own `default_payment_method`.",
+       "description": "The payment method charged for the customer's invoices and subscriptions unless they set their own.",
        "type": [
         "string",
         "null"
@@ -2315,7 +2333,7 @@
         "none",
         "exempt"
        ],
-       "description": "Whether the customer's purchases are exempt from tax: `none` or `exempt`."
+       "description": "Whether the customer's purchases are exempt from tax."
       },
       "metadata": {
        "anyOf": [
@@ -2444,7 +2462,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -2455,7 +2473,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -2595,7 +2613,7 @@
        ]
       },
       "default_payment_method": {
-       "description": "The payment method charged for the customer's invoices and subscriptions that don't set their own `default_payment_method`.",
+       "description": "The payment method charged for the customer's invoices and subscriptions unless they set their own.",
        "type": [
         "string",
         "null"
@@ -2607,7 +2625,7 @@
         "none",
         "exempt"
        ],
-       "description": "Whether the customer's purchases are exempt from tax: `none` or `exempt`."
+       "description": "Whether the customer's purchases are exempt from tax."
       },
       "metadata": {
        "anyOf": [
@@ -2664,7 +2682,7 @@
        "description": "The discount's name as shown to customers."
       },
       "code": {
-       "description": "The code customers enter to redeem the discount.",
+       "description": "The case-insensitive code customers enter to redeem the discount.",
        "anyOf": [
         {
          "type": "string"
@@ -2676,7 +2694,7 @@
       },
       "active": {
        "default": true,
-       "description": "Whether customers can redeem the code.",
+       "description": "Whether the discount can be redeemed.",
        "type": "boolean"
       },
       "amount_off": {
@@ -2705,7 +2723,7 @@
        ]
       },
       "expires_at": {
-       "description": "When the code expires, in milliseconds since the Unix epoch.",
+       "description": "When the discount expires, in milliseconds since the Unix epoch.",
        "anyOf": [
         {
          "type": "integer"
@@ -2716,7 +2734,7 @@
        ]
       },
       "max_redemptions": {
-       "description": "How many times the code can be redeemed.",
+       "description": "The limit on redemptions across all customers.",
        "anyOf": [
         {
          "type": "integer"
@@ -2727,7 +2745,7 @@
        ]
       },
       "minimum_amount": {
-       "description": "The smallest order, before discounts, the code applies to, in cents.",
+       "description": "The order subtotal, in cents, a customer has to reach to use the discount.",
        "anyOf": [
         {
          "type": "integer",
@@ -2740,16 +2758,16 @@
       },
       "first_purchase_only": {
        "default": false,
-       "description": "Whether the code works only on a customer's first purchase.",
+       "description": "Whether the discount works only on a customer's first purchase.",
        "type": "boolean"
       },
       "once_per_customer": {
        "default": false,
-       "description": "Whether each customer can redeem the code only once.",
+       "description": "Whether each customer can redeem the discount only once.",
        "type": "boolean"
       },
       "applies_to": {
-       "description": "The IDs of the products the discount applies to.",
+       "description": "The IDs of the products to limit the discount to, instead of all products.",
        "anyOf": [
         {
          "type": "array",
@@ -2894,7 +2912,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -2905,7 +2923,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -2986,7 +3004,7 @@
    ],
    "method": "PATCH",
    "path": "/v1/discounts/{id}",
-   "description": "Update a discount's `name`, `active` or `metadata`",
+   "description": "Update a discount",
    "path_params": [
     {
      "name": "id",
@@ -3016,7 +3034,7 @@
        "type": "string"
       },
       "active": {
-       "description": "Whether customers can redeem the code.",
+       "description": "Whether the discount can be redeemed.",
        "type": "boolean"
       },
       "metadata": {
@@ -3126,7 +3144,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -3137,7 +3155,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -3497,7 +3515,8 @@
          ]
         }
        },
-       "additionalProperties": false
+       "additionalProperties": false,
+       "description": "Evidence you submit to contest the dispute."
       },
       "metadata": {
        "anyOf": [
@@ -3611,7 +3630,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "type": "integer",
       "minimum": 1,
@@ -3621,7 +3640,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -3713,7 +3732,6 @@
        "description": "The file to upload, as binary data."
       },
       "purpose": {
-       "description": "The file's intended use.",
        "$ref": "FilePurpose"
       }
      },
@@ -3814,7 +3832,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -3825,7 +3843,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -3922,7 +3940,7 @@
      "type": "object",
      "properties": {
       "name": {
-       "description": "The name of the file.",
+       "description": "The filename the file downloads with.",
        "type": "string"
       }
      },
@@ -3993,7 +4011,7 @@
        "type": "string"
       },
       "billing_address": {
-       "description": "The billing address for this invoice.",
+       "description": "The customer's billing address, shown on the invoice.",
        "anyOf": [
         {
          "type": "object",
@@ -4053,27 +4071,27 @@
        ]
       },
       "shipping_details": {
-       "description": "Shipping details for this invoice.",
+       "description": "Where the invoice's order ships.",
        "anyOf": [
         {
          "type": "object",
          "properties": {
           "name": {
-           "description": "Recipient's name for shipping.",
+           "description": "The recipient's name.",
            "type": [
             "string",
             "null"
            ]
           },
           "phone": {
-           "description": "Recipient's phone number for shipping.",
+           "description": "The recipient's phone number.",
            "type": [
             "string",
             "null"
            ]
           },
           "address": {
-           "description": "The shipping address for this invoice.",
+           "description": "The address to ship to.",
            "anyOf": [
             {
              "type": "object",
@@ -4146,7 +4164,7 @@
         "type": "object",
         "properties": {
          "price": {
-          "description": "The ID of the price to use for this line item.",
+          "description": "The catalog price to bill.",
           "type": [
            "string",
            "null"
@@ -4165,7 +4183,7 @@
          "quantity": {
           "type": "number",
           "maximum": 99999999999.9999,
-          "description": "The quantity of the line item."
+          "description": "The number of units billed."
          },
          "unit_of_measure": {
           "description": "The unit `quantity` counts.",
@@ -4179,7 +4197,7 @@
           ]
          },
          "description": {
-          "description": "The line's description.",
+          "description": "Extra detail shown under the line's name on the invoice.",
           "type": [
            "string",
            "null"
@@ -4200,7 +4218,7 @@
           ]
          },
          "taxes": {
-          "description": "The line's taxes.",
+          "description": "The line's taxes, in place of the invoice's `default_taxes`.",
           "anyOf": [
            {
             "type": "array",
@@ -4210,10 +4228,12 @@
               "percentage": {
                "type": "number",
                "minimum": 0,
-               "maximum": 100
+               "maximum": 100,
+               "description": "The tax rate as a percentage."
               },
               "display_name": {
-               "type": "string"
+               "type": "string",
+               "description": "The tax's name, such as \"CA Sales Tax\"."
               }
              },
              "required": [
@@ -4234,7 +4254,7 @@
         ],
         "additionalProperties": false
        },
-       "description": "The line items for this invoice."
+       "description": "The items the invoice bills."
       },
       "discounts": {
        "description": "The discounts or discount codes to apply to this invoice.",
@@ -4244,7 +4264,7 @@
        }
       },
       "due_at": {
-       "description": "The due date for this invoice as a Unix timestamp in milliseconds.",
+       "description": "When payment of the invoice is due.",
        "anyOf": [
         {
          "type": "integer",
@@ -4268,11 +4288,11 @@
        ]
       },
       "collection_method": {
-       "description": "How the invoice is paid.",
+       "default": "send_invoice",
        "$ref": "InvoiceCollectionMethod"
       },
       "default_payment_method": {
-       "description": "The saved payment method charged when the invoice is collected automatically.",
+       "description": "The saved payment method to charge for the invoice, in place of the customer's `default_payment_method`.",
        "type": [
         "string",
         "null"
@@ -4289,7 +4309,7 @@
        ]
       },
       "attachments": {
-       "description": "The IDs of files to attach to this invoice.",
+       "description": "Files shown to the customer alongside the invoice.",
        "anyOf": [
         {
          "type": "array",
@@ -4303,7 +4323,7 @@
        ]
       },
       "customer_reference": {
-       "description": "The customer's purchase order number, up to 25 characters.",
+       "description": "The customer's purchase order number.",
        "anyOf": [
         {
          "type": "string"
@@ -4314,14 +4334,14 @@
        ]
       },
       "memo": {
-       "description": "A memo displayed on the invoice.",
+       "description": "A note to the customer, shown on the invoice.",
        "type": [
         "string",
         "null"
        ]
       },
       "footer": {
-       "description": "Footer text displayed on the invoice.",
+       "description": "Text shown at the bottom of the invoice.",
        "type": [
         "string",
         "null"
@@ -4350,10 +4370,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -4526,7 +4548,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -4537,7 +4559,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -4699,7 +4721,7 @@
    ],
    "method": "GET",
    "path": "/v1/invoices/{id}/pdf",
-   "description": "Generate a PDF rendering of an invoice",
+   "description": "Download an invoice as a PDF",
    "path_params": [
     {
      "name": "id",
@@ -4722,7 +4744,7 @@
    ],
    "method": "GET",
    "path": "/v1/invoices/{id}/receipt",
-   "description": "Generate a PDF rendering of an invoice receipt",
+   "description": "Download an invoice's receipt as a PDF",
    "path_params": [
     {
      "name": "id",
@@ -4745,7 +4767,7 @@
    ],
    "method": "POST",
    "path": "/v1/invoices/{id}/send",
-   "description": "Send an invoice email notification",
+   "description": "Email an invoice to the customer",
    "path_params": [
     {
      "name": "id",
@@ -4834,11 +4856,11 @@
      "type": "object",
      "properties": {
       "customer": {
-       "description": "The ID of the customer for this invoice.",
+       "description": "The customer to bill.",
        "type": "string"
       },
       "billing_address": {
-       "description": "The billing address for this invoice.",
+       "description": "The customer's billing address, shown on the invoice.",
        "anyOf": [
         {
          "type": "object",
@@ -4898,27 +4920,27 @@
        ]
       },
       "shipping_details": {
-       "description": "Shipping details for this invoice.",
+       "description": "Where the invoice's order ships.",
        "anyOf": [
         {
          "type": "object",
          "properties": {
           "name": {
-           "description": "Recipient's name for shipping.",
+           "description": "The recipient's name.",
            "type": [
             "string",
             "null"
            ]
           },
           "phone": {
-           "description": "Recipient's phone number for shipping.",
+           "description": "The recipient's phone number.",
            "type": [
             "string",
             "null"
            ]
           },
           "address": {
-           "description": "The shipping address for this invoice.",
+           "description": "The address to ship to.",
            "anyOf": [
             {
              "type": "object",
@@ -4986,13 +5008,13 @@
        ]
       },
       "line_items": {
-       "description": "The line items for this invoice.",
+       "description": "The items the invoice bills.",
        "type": "array",
        "items": {
         "type": "object",
         "properties": {
          "price": {
-          "description": "The ID of the price to use for this line item.",
+          "description": "The catalog price to bill.",
           "type": [
            "string",
            "null"
@@ -5011,7 +5033,7 @@
          "quantity": {
           "type": "number",
           "maximum": 99999999999.9999,
-          "description": "The quantity of the line item."
+          "description": "The number of units billed."
          },
          "unit_of_measure": {
           "description": "The unit `quantity` counts.",
@@ -5025,7 +5047,7 @@
           ]
          },
          "description": {
-          "description": "The line's description.",
+          "description": "Extra detail shown under the line's name on the invoice.",
           "type": [
            "string",
            "null"
@@ -5046,7 +5068,7 @@
           ]
          },
          "taxes": {
-          "description": "The line's taxes.",
+          "description": "The line's taxes, in place of the invoice's `default_taxes`.",
           "anyOf": [
            {
             "type": "array",
@@ -5056,10 +5078,12 @@
               "percentage": {
                "type": "number",
                "minimum": 0,
-               "maximum": 100
+               "maximum": 100,
+               "description": "The tax rate as a percentage."
               },
               "display_name": {
-               "type": "string"
+               "type": "string",
+               "description": "The tax's name, such as \"CA Sales Tax\"."
               }
              },
              "required": [
@@ -5093,7 +5117,7 @@
        }
       },
       "due_at": {
-       "description": "The due date for this invoice as a Unix timestamp in milliseconds.",
+       "description": "When payment of the invoice is due.",
        "anyOf": [
         {
          "type": "integer",
@@ -5120,7 +5144,7 @@
        "$ref": "InvoiceCollectionMethod"
       },
       "default_payment_method": {
-       "description": "The saved payment method charged when the invoice is collected automatically.",
+       "description": "The saved payment method to charge for the invoice, in place of the customer's `default_payment_method`.",
        "type": [
         "string",
         "null"
@@ -5137,7 +5161,7 @@
        ]
       },
       "attachments": {
-       "description": "The IDs of files to attach to this invoice.",
+       "description": "Files shown to the customer alongside the invoice.",
        "anyOf": [
         {
          "type": "array",
@@ -5151,7 +5175,7 @@
        ]
       },
       "customer_reference": {
-       "description": "The customer's purchase order number, up to 25 characters.",
+       "description": "The customer's purchase order number.",
        "anyOf": [
         {
          "type": "string"
@@ -5162,14 +5186,14 @@
        ]
       },
       "memo": {
-       "description": "A memo displayed on the invoice.",
+       "description": "A note to the customer, shown on the invoice.",
        "type": [
         "string",
         "null"
        ]
       },
       "footer": {
-       "description": "Footer text displayed on the invoice.",
+       "description": "Text shown at the bottom of the invoice.",
        "type": [
         "string",
         "null"
@@ -5198,10 +5222,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -5386,7 +5412,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -5397,7 +5423,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -5680,7 +5706,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -5691,7 +5717,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -5899,7 +5925,8 @@
        ]
       },
       "allow_redisplay": {
-       "$ref": "PaymentMethodAllowRedisplay"
+       "type": "boolean",
+       "description": "Whether it can be offered to returning customers at checkout."
       }
      },
      "additionalProperties": false
@@ -6032,23 +6059,23 @@
        "minimum": 0
       },
       "capture_method": {
-       "description": "When to capture the payment.",
        "default": "automatic",
        "type": "string",
        "enum": [
         "automatic",
         "manual"
-       ]
+       ],
+       "description": "When to capture the payment's funds."
       },
       "customer": {
-       "description": "The payment's customer.",
+       "description": "The customer making the payment.",
        "type": [
         "string",
         "null"
        ]
       },
       "description": {
-       "description": "What the payment is for.",
+       "description": "A note for your own reference, not shown to the customer.",
        "type": [
         "string",
         "null"
@@ -6062,7 +6089,7 @@
        ]
       },
       "metadata": {
-       "description": "Your own key-value data on the object.",
+       "description": "Arbitrary key-value data for your own use.",
        "anyOf": [
         {
          "$ref": "MetadataInput"
@@ -6073,7 +6100,7 @@
        ]
       },
       "mandate_data": {
-       "description": "The customer's authorization for future debits, recorded as a mandate.",
+       "description": "The customer's authorization for future bank debits, recorded as a mandate.",
        "type": "object",
        "properties": {
         "customer_acceptance": {
@@ -6139,14 +6166,9 @@
        ],
        "additionalProperties": false
       },
-      "off_session": {
-       "description": "Whether the customer is absent, such as for a renewal or a delayed charge.",
-       "type": "boolean"
-      },
-      "recurring": {
-       "description": "Whether the payment is one in a series charged on a fixed schedule, such as your own subscription renewals.",
-       "default": false,
-       "type": "boolean"
+      "initiator": {
+       "default": "customer",
+       "$ref": "PaymentInitiator"
       },
       "payment_method": {
        "anyOf": [
@@ -6157,10 +6179,10 @@
          "$ref": "PaymentMethodCreate"
         }
        ],
-       "description": "The payment method to charge: a saved payment method's ID, or new payment method details."
+       "description": "The payment method to charge: either a saved payment method ID or raw details"
       },
       "statement_descriptor": {
-       "description": "Overrides your default statement descriptor.",
+       "description": "The text on the customer's statement, in place of your default.",
        "anyOf": [
         {
          "type": "string"
@@ -6171,11 +6193,11 @@
        ]
       },
       "three_d_secure": {
-       "description": "3D Secure for a card the customer pays with themselves.",
+       "description": "3D Secure authentication for the cardholder.",
        "$ref": "PaymentThreeDSecureRequest"
       },
       "return_url": {
-       "description": "Where to send the customer once they finish a step in `next_action` that you redirected them to.",
+       "description": "The URL the customer returns to after a `next_action` step finishes.",
        "type": "string",
        "format": "uri"
       }
@@ -6278,7 +6300,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -6289,7 +6311,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -6405,9 +6427,6 @@
          "type": "null"
         }
        ]
-      },
-      "fraud_details": {
-       "$ref": "PaymentFraudDetails"
       }
      },
      "additionalProperties": false
@@ -6456,7 +6475,7 @@
        "type": "string"
       },
       "active": {
-       "description": "Whether the price can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices.",
+       "description": "Whether the price can be used for new purchases.",
        "type": [
         "boolean",
         "null"
@@ -6474,7 +6493,7 @@
        ]
       },
       "amount": {
-       "description": "The amount in whole cents.",
+       "description": "The amount, in whole cents.",
        "anyOf": [
         {
          "type": "integer",
@@ -6490,7 +6509,7 @@
        "anyOf": [
         {
          "type": "string",
-         "description": "The amount in cents as a decimal string with up to six decimal places, such as `\"0.35\"` for $0.0035 per unit."
+         "description": "The amount in cents as a decimal string, for amounts with a fraction of a cent, such as `\"0.35\"` for $0.0035."
         },
         {
          "type": "null"
@@ -6498,7 +6517,7 @@
        ]
       },
       "type": {
-       "description": "`one_time` for a single purchase, or `recurring` for a subscription.",
+       "description": "Whether the price is charged once or on a schedule.",
        "type": "string",
        "enum": [
         "one_time",
@@ -6506,7 +6525,7 @@
        ]
       },
       "recurring": {
-       "description": "The billing period.",
+       "description": "How often a `recurring` price bills.",
        "anyOf": [
         {
          "$ref": "PriceRecurringInput"
@@ -6627,7 +6646,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -6638,7 +6657,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -6746,7 +6765,7 @@
      "type": "object",
      "properties": {
       "active": {
-       "description": "Whether the price can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices.",
+       "description": "Whether the price can be used for new purchases.",
        "type": "boolean"
       },
       "name": {
@@ -6815,10 +6834,10 @@
      "properties": {
       "name": {
        "type": "string",
-       "description": "The product's name."
+       "description": "The product's name, shown to customers at checkout and on invoices."
       },
       "description": {
-       "description": "The product's description.",
+       "description": "Details shown to customers under the product's name.",
        "anyOf": [
         {
          "type": "string"
@@ -6829,7 +6848,7 @@
        ]
       },
       "sku": {
-       "description": "The product's stock keeping unit (SKU).",
+       "description": "Your stock keeping unit (SKU) for the product.",
        "anyOf": [
         {
          "type": "string"
@@ -6859,13 +6878,13 @@
          "type": "null"
         }
        ],
-       "description": "The unit the product's quantity counts, which its line items default to."
+       "description": "The unit the product is sold by, which its line items default to."
       },
       "attributes": {
        "$ref": "ProductAttributes"
       },
       "active": {
-       "description": "Whether the product can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices.",
+       "description": "Whether the product can be used for new purchases.",
        "type": [
         "boolean",
         "null"
@@ -7013,7 +7032,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -7024,7 +7043,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -7129,11 +7148,11 @@
      "type": "object",
      "properties": {
       "name": {
-       "description": "The product's name.",
+       "description": "The product's name, shown to customers at checkout and on invoices.",
        "type": "string"
       },
       "description": {
-       "description": "The product's description.",
+       "description": "Details shown to customers under the product's name.",
        "anyOf": [
         {
          "type": "string"
@@ -7144,7 +7163,7 @@
        ]
       },
       "sku": {
-       "description": "The product's stock keeping unit (SKU).",
+       "description": "Your stock keeping unit (SKU) for the product.",
        "anyOf": [
         {
          "type": "string"
@@ -7174,14 +7193,14 @@
          "type": "null"
         }
        ],
-       "description": "The unit the product's quantity counts, which its line items default to."
+       "description": "The unit the product is sold by, which its line items default to."
       },
       "attributes": {
        "description": "The product's attributes, replacing the existing ones.",
        "$ref": "ProductAttributes"
       },
       "active": {
-       "description": "Whether the product can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices.",
+       "description": "Whether the product can be used for new purchases.",
        "type": "boolean"
       },
       "default_price": {
@@ -7256,11 +7275,11 @@
      "type": "object",
      "properties": {
       "payment": {
-       "description": "The `succeeded` payment to refund.",
+       "description": "The payment to refund.",
        "type": "string"
       },
       "amount": {
-       "description": "The amount to refund, in cents, up to what's left to refund.",
+       "description": "The amount to refund, in cents.",
        "type": "integer"
       },
       "reason": {
@@ -7363,7 +7382,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -7374,7 +7393,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -7527,16 +7546,19 @@
          "type": "object",
          "properties": {
           "maximum": {
+           "description": "The longest delivery is estimated to take.",
            "anyOf": [
             {
              "type": "object",
              "properties": {
               "unit": {
+               "description": "The unit of `value`.",
                "$ref": "DeliveryEstimateUnit"
               },
               "value": {
                "type": "integer",
-               "minimum": 0
+               "minimum": 0,
+               "description": "The number of `unit`s."
               }
              },
              "required": [
@@ -7551,16 +7573,19 @@
            ]
           },
           "minimum": {
+           "description": "The shortest delivery is estimated to take.",
            "anyOf": [
             {
              "type": "object",
              "properties": {
               "unit": {
+               "description": "The unit of `value`.",
                "$ref": "DeliveryEstimateUnit"
               },
               "value": {
                "type": "integer",
-               "minimum": 0
+               "minimum": 0,
+               "description": "The number of `unit`s."
               }
              },
              "required": [
@@ -7690,7 +7715,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -7701,7 +7726,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -7820,16 +7845,19 @@
          "type": "object",
          "properties": {
           "maximum": {
+           "description": "The longest delivery is estimated to take.",
            "anyOf": [
             {
              "type": "object",
              "properties": {
               "unit": {
+               "description": "The unit of `value`.",
                "$ref": "DeliveryEstimateUnit"
               },
               "value": {
                "type": "integer",
-               "minimum": 0
+               "minimum": 0,
+               "description": "The number of `unit`s."
               }
              },
              "required": [
@@ -7844,16 +7872,19 @@
            ]
           },
           "minimum": {
+           "description": "The shortest delivery is estimated to take.",
            "anyOf": [
             {
              "type": "object",
              "properties": {
               "unit": {
+               "description": "The unit of `value`.",
                "$ref": "DeliveryEstimateUnit"
               },
               "value": {
                "type": "integer",
-               "minimum": 0
+               "minimum": 0,
+               "description": "The number of `unit`s."
               }
              },
              "required": [
@@ -7935,11 +7966,13 @@
      "type": "object",
      "properties": {
       "prorate": {
-       "description": "Credits the unused time on the current period with a credit note.",
+       "description": "Whether to credit the customer for the unused time in the current period.",
+       "default": false,
        "type": "boolean"
       },
       "unused_credit": {
-       "description": "What happens to the credit `prorate` issues for the unused time.",
+       "description": "What happens to the credit from `prorate`.",
+       "default": "keep",
        "type": "string",
        "enum": [
         "keep",
@@ -7947,7 +7980,6 @@
        ]
       },
       "cancellation_details": {
-       "description": "Why the customer canceled.",
        "$ref": "SubscriptionCancellationDetailsInput"
       }
      },
@@ -8002,7 +8034,7 @@
        "description": "The prices to bill each period, all on the same interval."
       },
       "default_payment_method": {
-       "description": "The saved payment method charged for renewals.",
+       "description": "The saved payment method charged for renewals, in place of the customer's `default_payment_method`.",
        "type": [
         "string",
         "null"
@@ -8013,16 +8045,18 @@
        "description": "How each invoice is paid.",
        "$ref": "InvoiceCollectionMethod"
       },
-      "off_session": {
-       "description": "Whether the customer is absent for the first charge.",
-       "type": "boolean"
+      "initiator": {
+       "description": "Who starts the first payment.",
+       "default": "customer",
+       "$ref": "PaymentInitiator"
       },
       "payment_behavior": {
        "description": "What happens if the first invoice's charge is declined.",
+       "default": "allow_incomplete",
        "$ref": "SubscriptionPaymentBehavior"
       },
       "days_until_due": {
-       "description": "For `send_invoice` subscriptions, the number of days the customer has to pay each invoice.",
+       "description": "The number of days the customer has to pay each invoice they're sent.",
        "anyOf": [
         {
          "type": "integer",
@@ -8043,10 +8077,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -8063,13 +8099,13 @@
        "maximum": 730
       },
       "trial_end_at": {
-       "description": "Starts the subscription with a free trial that ends at this Unix timestamp in milliseconds.",
+       "description": "Starts the subscription with a free trial that ends at this time.",
        "type": "integer",
        "minimum": -8640000000000000,
        "maximum": 8639904182400000
       },
       "cancel_at": {
-       "description": "Cancels the subscription at this Unix timestamp in milliseconds, or with `period_end`, at the end of the first period.",
+       "description": "Schedules the subscription to cancel at this time, or with `period_end`, at the end of the first period.",
        "anyOf": [
         {
          "anyOf": [
@@ -8101,7 +8137,7 @@
        ]
       },
       "shipping_rate": {
-       "description": "The shipping rate to charge each period, at its amount when the subscription is created.",
+       "description": "The shipping rate to charge each period.",
        "type": [
         "string",
         "null"
@@ -8214,7 +8250,7 @@
     {
      "name": "limit",
      "required": false,
-     "description": "The maximum number of objects to return, from 1 to 1000.",
+     "description": "The maximum number of objects to return.",
      "schema": {
       "default": 50,
       "type": "integer",
@@ -8225,7 +8261,7 @@
     {
      "name": "filters",
      "required": false,
-     "description": "Filters for the list, combined with `and` and `or`.",
+     "description": "Filters for the list.",
      "schema": {
       "anyOf": [
        {
@@ -8331,7 +8367,7 @@
      "type": "object",
      "properties": {
       "resumes_at": {
-       "description": "When the subscription resumes on its own, as a Unix timestamp in milliseconds.",
+       "description": "When the subscription resumes on its own.",
        "anyOf": [
         {
          "type": "integer",
@@ -8432,6 +8468,7 @@
      "name": "apply_at",
      "required": false,
      "schema": {
+      "default": "now",
       "$ref": "SubscriptionChangeApplyAt"
      }
     },
@@ -8439,13 +8476,14 @@
      "name": "proration_behavior",
      "required": false,
      "schema": {
+      "default": "always_invoice",
       "$ref": "SubscriptionProrationBehavior"
      }
     },
     {
      "name": "proration_at",
      "required": false,
-     "description": "When the change is prorated from, as a Unix timestamp in milliseconds.",
+     "description": "When the change is prorated from.",
      "schema": {
       "type": "integer",
       "minimum": -8640000000000000,
@@ -8503,27 +8541,30 @@
        }
       },
       "apply_at": {
+       "default": "now",
        "$ref": "SubscriptionChangeApplyAt"
       },
       "proration_behavior": {
+       "default": "always_invoice",
        "$ref": "SubscriptionProrationBehavior"
       },
       "proration_at": {
-       "description": "When the change is prorated from, as a Unix timestamp in milliseconds.",
+       "description": "When the change is prorated from.",
        "type": "integer",
        "minimum": -8640000000000000,
        "maximum": 8640000000000000
       },
       "payment_behavior": {
        "description": "What happens if the charge for a change to `items` is declined.",
+       "default": "allow_incomplete",
        "$ref": "SubscriptionPaymentBehavior"
       },
       "pending_change": {
-       "description": "`null` cancels the scheduled change.",
+       "description": "Pass `null` to cancel the scheduled change.",
        "type": "null"
       },
       "default_payment_method": {
-       "description": "The saved payment method charged for renewals.",
+       "description": "The saved payment method charged for renewals, in place of the customer's `default_payment_method`.",
        "type": [
         "string",
         "null"
@@ -8534,7 +8575,7 @@
        "$ref": "InvoiceCollectionMethod"
       },
       "days_until_due": {
-       "description": "For `send_invoice` subscriptions, the number of days the customer has to pay each invoice.",
+       "description": "The number of days the customer has to pay each invoice they're sent.",
        "anyOf": [
         {
          "type": "integer",
@@ -8555,10 +8596,12 @@
          "percentage": {
           "type": "number",
           "minimum": 0,
-          "maximum": 100
+          "maximum": 100,
+          "description": "The tax rate as a percentage."
          },
          "display_name": {
-          "type": "string"
+          "type": "string",
+          "description": "The tax's name, such as \"CA Sales Tax\"."
          }
         },
         "required": [
@@ -8569,7 +8612,7 @@
        }
       },
       "trial_end_at": {
-       "description": "For a trialing subscription, when the trial ends, as a Unix timestamp in milliseconds.",
+       "description": "When the trial ends, or `now` to end it and start the first paid period immediately.",
        "anyOf": [
         {
          "type": "string",
@@ -8583,7 +8626,7 @@
        ]
       },
       "cancel_at": {
-       "description": "Cancels the subscription at this Unix timestamp in milliseconds, or with `period_end`, at the end of the current period.",
+       "description": "Schedules the subscription to cancel at this time, or with `period_end`, at the end of the current period.",
        "anyOf": [
         {
          "anyOf": [
@@ -8604,7 +8647,6 @@
        ]
       },
       "cancellation_details": {
-       "description": "The customer's reason for canceling.",
        "$ref": "SubscriptionCancellationDetailsInput"
       },
       "shipping_details": {
@@ -8619,7 +8661,7 @@
        ]
       },
       "shipping_rate": {
-       "description": "The shipping rate to charge from the next renewal, at its current amount.",
+       "description": "The shipping rate to charge from the next renewal.",
        "type": [
         "string",
         "null"
@@ -8722,7 +8764,7 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -8731,7 +8773,7 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "active": {
      "type": "boolean",
@@ -8739,7 +8781,7 @@
     },
     "description": {
      "type": "string",
-     "description": "The key's description."
+     "description": "The name you gave the key to tell it apart from your others."
     }
    },
    "required": [
@@ -8768,7 +8810,7 @@
      ]
     },
     "display_name": {
-     "description": "How Apple Pay described the card to the customer, such as \"Visa 1234\".",
+     "description": "The card as Apple Pay showed it to the customer, such as \"Visa 1234\".",
      "type": [
       "string",
       "null"
@@ -8786,7 +8828,7 @@
      "description": "The last 4 digits of the device account number Apple Pay charged in place of the card number."
     },
     "eci": {
-     "description": "The electronic commerce indicator of the payment's cryptogram, when the card network gave one.",
+     "description": "The electronic commerce indicator (ECI) of the payment's cryptogram.",
      "type": [
       "string",
       "null"
@@ -8815,7 +8857,7 @@
      "description": "The expiration year of the device account number."
     },
     "fingerprint": {
-     "description": "Identifies the device account number.",
+     "description": "Identifies the device account number, so payments from the same card on the same device share it.",
      "type": [
       "string",
       "null"
@@ -8836,7 +8878,7 @@
        "type": "null"
       }
      ],
-     "description": "The card's funding type, when Apple Pay gave it."
+     "description": "The card's funding type."
     }
    },
    "required": [
@@ -8937,7 +8979,7 @@
     }
    },
    "additionalProperties": false,
-   "description": "The `paymentMethod` object from the Apple Pay payment token, describing the card the customer chose."
+   "description": "The `paymentMethod` object from the Apple Pay payment token, used to display the card the customer chose."
   },
   "AppliedDiscount": {
    "type": "object",
@@ -8949,10 +8991,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -8978,7 +9020,7 @@
      "description": "Expandable."
     },
     "code": {
-     "description": "The code the customer entered, or `null` when it was applied without one.",
+     "description": "The code the customer entered to get the discount.",
      "type": [
       "string",
       "null"
@@ -8990,7 +9032,7 @@
       "line_items",
       "shipping"
      ],
-     "description": "What the discount applies to."
+     "description": "The part of the order the discount reduces."
     },
     "customer": {
      "anyOf": [
@@ -9092,7 +9134,7 @@
    "type": "object",
    "properties": {
     "created_at": {
-     "description": "Filter by the discount's creation date",
+     "description": "Filter by when the discount was applied.",
      "anyOf": [
       {
        "type": "integer",
@@ -9120,7 +9162,7 @@
      ]
     },
     "name": {
-     "description": "Filter by the discount's name",
+     "description": "Filter by the discount's name when it was applied.",
      "anyOf": [
       {
        "type": "string"
@@ -9336,7 +9378,7 @@
     "address"
    ],
    "additionalProperties": false,
-   "description": "Which billing details checkout collects."
+   "description": "The billing details checkout collects."
   },
   "BillingDetailsCollectionInput": {
    "anyOf": [
@@ -9358,7 +9400,7 @@
      "additionalProperties": false
     }
    ],
-   "description": "Which billing details checkout collects."
+   "description": "The billing details checkout collects."
   },
   "BillingPortalSession": {
    "type": "object",
@@ -9370,10 +9412,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -9411,17 +9453,16 @@
       {
        "type": "null"
       }
-     ],
-     "description": "The change the portal opens to, if any."
+     ]
     },
     "url": {
      "type": "string",
      "format": "uri",
-     "description": "The link that signs the customer in to the portal, until `expires_at`."
+     "description": "The link to send the customer to, which signs them in to the portal."
     },
     "expires_at": {
      "type": "integer",
-     "description": "When `url` stops working, as a Unix timestamp in milliseconds."
+     "description": "When `url` stops working."
     }
    },
    "required": [
@@ -9452,7 +9493,7 @@
      "type": "string"
     },
     "price": {
-     "description": "The price to switch to, or `null` to keep the current one.",
+     "description": "The price to switch to.",
      "type": [
       "string",
       "null"
@@ -9467,7 +9508,7 @@
        "type": "null"
       }
      ],
-     "description": "The quantity to switch to, or `null` to keep the current one."
+     "description": "The quantity to switch to."
     },
     "proration_behavior": {
      "anyOf": [
@@ -9478,7 +9519,7 @@
        "type": "null"
       }
      ],
-     "description": "How a change that takes effect now is billed, or `null` for the default."
+     "description": "How a change that takes effect now is billed."
     },
     "apply_at": {
      "anyOf": [
@@ -9489,7 +9530,7 @@
        "type": "null"
       }
      ],
-     "description": "When the change takes effect, or `null` for the default."
+     "description": "When the change takes effect."
     }
    },
    "required": [
@@ -9516,7 +9557,7 @@
      "type": "string"
     },
     "price": {
-     "description": "The recurring price to switch to, which can be any of your recurring prices.",
+     "description": "The price to switch to.",
      "type": "string"
     },
     "quantity": {
@@ -9566,12 +9607,12 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "created_at": {
      "type": "integer",
@@ -9579,7 +9620,7 @@
     },
     "bin": {
      "type": "string",
-     "description": "The first 8 digits of the card number, or 6 if it has fewer than 16 digits."
+     "description": "The first 6 or 8 digits of the card number, which identify its issuer."
     },
     "brand": {
      "type": "string",
@@ -9671,7 +9712,7 @@
      "description": "The expiration year."
     },
     "fingerprint": {
-     "description": "Identifies the card number.",
+     "description": "Identifies the card number, so you can tell when the same card is used again.",
      "type": [
       "string",
       "null"
@@ -9754,12 +9795,12 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "created_at": {
      "type": "integer",
@@ -9781,12 +9822,12 @@
     },
     "amount_collected": {
      "type": "integer",
-     "description": "The amount the session's successful payments collected, in cents."
+     "description": "The amount collected so far, in cents."
     },
     "amount_remaining": {
      "type": "integer",
      "minimum": 0,
-     "description": "The amount left to pay in cents, after payments that succeeded or are processing."
+     "description": "The amount left to pay, in cents."
     },
     "tax_total": {
      "type": "integer",
@@ -9804,7 +9845,7 @@
        "properties": {
         "rate": {
          "type": "number",
-         "description": "The percentage card payments add, such as `3` for 3%."
+         "description": "The percentage added to card payments, such as `3` for 3%."
         },
         "amount_remaining": {
          "type": "integer",
@@ -9822,7 +9863,7 @@
        "type": "null"
       }
      ],
-     "description": "Dual pricing on a one-off invoice's session that accepts bank payments."
+     "description": "A higher price for card payments than for bank payments."
     },
     "client_details": {
      "anyOf": [
@@ -9851,8 +9892,7 @@
           {
            "type": "null"
           }
-         ],
-         "description": "The customer's device type."
+         ]
         }
        },
        "required": [
@@ -9920,7 +9960,7 @@
         "none",
         "exempt"
        ],
-       "description": "The customer's `tax_exempt` when the session was given its customer."
+       "description": "The customer's tax exemption, as it applies to the session."
       }
      },
      "required": [
@@ -9992,8 +10032,7 @@
       {
        "type": "null"
       }
-     ],
-     "description": "Where checkout collects a shipping address, or `null` when it doesn't collect one."
+     ]
     },
     "billing_details_collection": {
      "anyOf": [
@@ -10003,8 +10042,7 @@
       {
        "type": "null"
       }
-     ],
-     "description": "Which billing details checkout collects, or `null` when it doesn't collect any."
+     ]
     },
     "phone_number_collection": {
      "type": "boolean",
@@ -10058,7 +10096,7 @@
           "$ref": "ShippingRate"
          }
         ],
-        "description": "The shipping rate."
+        "description": "Expandable."
        }
       },
       "required": [
@@ -10109,7 +10147,7 @@
      "description": "Expandable."
     },
     "subscription": {
-     "description": "In `subscription` mode, the subscription the session created.",
+     "description": "The subscription the session created, or the one whose payment method a `setup` session replaces.",
      "type": [
       "string",
       "null"
@@ -10136,7 +10174,7 @@
            "type": "null"
           }
          ],
-         "description": "The days of free trial the subscription starts with, from when the session completes."
+         "description": "The length of the subscription's free trial, in days."
         },
         "metadata": {
          "description": "Metadata for the subscription the session creates.",
@@ -10156,14 +10194,14 @@
      "description": "Settings for the subscription a `subscription` mode session creates."
     },
     "mandate_text": {
-     "description": "The ACH debit authorization the customer accepts when the session saves a personal bank account for later payments, recorded on the account's mandate.",
+     "description": "The ACH debit authorization the customer accepts when saving a personal bank account, recorded on its mandate.",
      "type": [
       "string",
       "null"
      ]
     },
     "company_mandate_text": {
-     "description": "The `mandate_text` for a company bank account (`account_holder_type: company`).",
+     "description": "The `mandate_text` for a company bank account.",
      "type": [
       "string",
       "null"
@@ -10229,7 +10267,7 @@
        "type": "null"
       }
      ],
-     "description": "When the session expires if it isn't completed by then."
+     "description": "When the session expires if it isn't completed."
     },
     "submit_label": {
      "$ref": "SessionSubmitLabel"
@@ -10244,12 +10282,12 @@
        "type": "null"
       }
      ],
-     "description": "Where Bias Checkout sends the customer after the session completes."
+     "description": "The page Bias Checkout sends the customer to after the session completes."
     },
     "url": {
      "type": "string",
      "format": "uri",
-     "description": "The session's Bias Checkout page."
+     "description": "The Bias Checkout page to send the customer to."
     }
    },
    "required": [
@@ -10976,10 +11014,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -11034,7 +11072,7 @@
     },
     "subtotal": {
      "type": "integer",
-     "description": "The sum of the line items' subtotals, before tax."
+     "description": "The amount credited, before tax."
     },
     "tax_total": {
      "type": "integer",
@@ -11042,7 +11080,7 @@
     },
     "total": {
      "type": "integer",
-     "description": "The total credited, including taxes."
+     "description": "The amount credited with tax, split between `pre_payment_amount`, `refund_amount`, `credit_amount` and `out_of_band_amount`."
     },
     "pre_payment_amount": {
      "type": "integer",
@@ -11068,7 +11106,7 @@
      "description": "The refunds that settle `refund_amount`."
     },
     "memo": {
-     "description": "A memo shown in the credit note email.",
+     "description": "A note to the customer, shown in the credit note email.",
      "type": [
       "string",
       "null"
@@ -11152,7 +11190,7 @@
    "type": "object",
    "properties": {
     "created_at": {
-     "description": "Filter by the credit note's creation date",
+     "description": "Filter by the credit note's creation date.",
      "anyOf": [
       {
        "type": "integer",
@@ -11180,7 +11218,7 @@
      ]
     },
     "updated_at": {
-     "description": "Filter by the credit note's last update date",
+     "description": "Filter by the credit note's last update date.",
      "anyOf": [
       {
        "type": "integer",
@@ -11208,7 +11246,7 @@
      ]
     },
     "customer": {
-     "description": "Filter by the customer of the credited invoice",
+     "description": "Filter by the credit note's customer.",
      "anyOf": [
       {
        "type": "string"
@@ -11282,7 +11320,7 @@
      ]
     },
     "invoice": {
-     "description": "Filter by the invoice the credit note credits",
+     "description": "Filter by the invoice the credit note credits.",
      "anyOf": [
       {
        "type": "string"
@@ -11356,7 +11394,7 @@
      ]
     },
     "status": {
-     "description": "Filter by credit note status",
+     "description": "Filter by the credit note's status.",
      "anyOf": [
       {
        "$ref": "CreditNoteStatus"
@@ -11441,15 +11479,15 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "name": {
      "type": "string",
-     "description": "The line's display name."
+     "description": "The line's name, as the customer sees it."
     },
     "description": {
-     "description": "The line's description.",
+     "description": "Extra detail shown under the line's name.",
      "type": [
       "string",
       "null"
@@ -11464,11 +11502,11 @@
        "type": "null"
       }
      ],
-     "description": "The unit amount credited in whole cents, before tax, or `null` when it has a fraction of a cent."
+     "description": "The amount credited per unit, before tax, in whole cents."
     },
     "unit_amount_decimal": {
      "type": "string",
-     "description": "The unit amount credited in cents, before tax, as a decimal string with up to six decimal places, such as `\"0.35\"`."
+     "description": "The amount credited per unit, before tax, as a decimal string of cents that can hold a fraction of a cent, such as `\"0.35\"`."
     },
     "quantity": {
      "type": "number",
@@ -11506,7 +11544,7 @@
      "description": "The tax credited on the line."
     },
     "line_item": {
-     "description": "The invoice line item this line credits, if any.",
+     "description": "The invoice line item this line credits.",
      "type": [
       "string",
       "null"
@@ -11519,11 +11557,11 @@
        "properties": {
         "start": {
          "type": "integer",
-         "description": "Start of the credited period, as a Unix timestamp in milliseconds."
+         "description": "When the credited period starts."
         },
         "end": {
          "type": "integer",
-         "description": "End of the credited period, as a Unix timestamp in milliseconds."
+         "description": "When the credited period ends."
         }
        },
        "required": [
@@ -11536,15 +11574,15 @@
        "type": "null"
       }
      ],
-     "description": "The period of service the line credits, if any."
+     "description": "The period of service the line credits."
     },
     "subtotal": {
      "type": "integer",
-     "description": "`unit_amount` × `quantity`, before tax."
+     "description": "The amount the line credits, before tax."
     },
     "total": {
      "type": "integer",
-     "description": "The line's total in cents, with tax."
+     "description": "The amount the line credits, with tax."
     }
    },
    "required": [
@@ -11571,17 +11609,17 @@
      "properties": {
       "name": {
        "type": "string",
-       "description": "The line's display name."
+       "description": "The line's name, as the customer sees it."
       },
       "description": {
-       "description": "The line's description.",
+       "description": "Extra detail shown under the line's name.",
        "type": [
         "string",
         "null"
        ]
       },
       "unit_amount": {
-       "description": "The unit amount to credit in whole cents, before tax.",
+       "description": "The amount to credit per unit, before tax, in whole cents.",
        "anyOf": [
         {
          "type": "integer",
@@ -11597,7 +11635,7 @@
        "anyOf": [
         {
          "type": "string",
-         "description": "The unit amount to credit in cents, before tax, as a decimal string with up to six decimal places, such as `\"0.35\"`."
+         "description": "The amount to credit per unit, before tax, as a decimal string of cents that can hold a fraction of a cent, such as `\"0.35\"`."
         },
         {
          "type": "null"
@@ -11610,7 +11648,7 @@
        "description": "The quantity to credit."
       },
       "taxes": {
-       "description": "The line's taxes.",
+       "description": "The line's taxes, in place of the credit note's `default_taxes`.",
        "anyOf": [
         {
          "type": "array",
@@ -11620,10 +11658,12 @@
            "percentage": {
             "type": "number",
             "minimum": 0,
-            "maximum": 100
+            "maximum": 100,
+            "description": "The tax rate as a percentage."
            },
            "display_name": {
-            "type": "string"
+            "type": "string",
+            "description": "The tax's name, such as \"CA Sales Tax\"."
            }
           },
           "required": [
@@ -11657,7 +11697,7 @@
        "type": "integer"
       },
       "description": {
-       "description": "The line's description.",
+       "description": "Extra detail shown under the line's name, in place of the invoice line's description.",
        "type": [
         "string",
         "null"
@@ -11719,10 +11759,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -11770,7 +11810,7 @@
      "description": "The customer's saved shipping recipient and address."
     },
     "default_payment_method": {
-     "description": "The payment method charged for the customer's invoices and subscriptions that don't set their own `default_payment_method`.",
+     "description": "The payment method charged for the customer's invoices and subscriptions unless they set their own.",
      "type": [
       "string",
       "null"
@@ -11782,11 +11822,11 @@
       "none",
       "exempt"
      ],
-     "description": "Whether the customer's purchases are exempt from tax: `none` or `exempt`."
+     "description": "Whether the customer's purchases are exempt from tax."
     },
     "balance": {
      "type": "integer",
-     "description": "The customer's balance in cents: credit when positive, owed when negative."
+     "description": "The customer's credit in cents, applied to their invoices."
     },
     "external_sync": {
      "anyOf": [
@@ -11832,10 +11872,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -11858,11 +11898,11 @@
     },
     "amount": {
      "type": "integer",
-     "description": "The change in cents: positive adds credit, negative adds an amount owed."
+     "description": "The change to the balance, in cents."
     },
     "ending_balance": {
      "type": "integer",
-     "description": "The customer's balance in cents after this transaction."
+     "description": "The customer's balance after this transaction."
     },
     "invoice": {
      "anyOf": [
@@ -11919,7 +11959,7 @@
      "description": "Expandable."
     },
     "description": {
-     "description": "An internal note.",
+     "description": "A note for your own reference, not shown to the customer.",
      "type": [
       "string",
       "null"
@@ -12024,7 +12064,7 @@
    "type": "object",
    "properties": {
     "created_at": {
-     "description": "Filter by when the transaction was created",
+     "description": "Filter by the transaction's creation date.",
      "anyOf": [
       {
        "type": "integer",
@@ -12052,7 +12092,7 @@
      ]
     },
     "customer": {
-     "description": "Filter by the customer whose balance changed",
+     "description": "Filter by the customer whose balance changed.",
      "anyOf": [
       {
        "type": "string"
@@ -12126,7 +12166,7 @@
      ]
     },
     "type": {
-     "description": "Filter by transaction type",
+     "description": "Filter by what changed the balance.",
      "anyOf": [
       {
        "$ref": "CustomerBalanceTransactionType"
@@ -12200,7 +12240,7 @@
      ]
     },
     "invoice": {
-     "description": "Filter by the invoice that applied or gave back the balance",
+     "description": "Filter by the invoice that applied or gave back the balance.",
      "anyOf": [
       {
        "type": "string"
@@ -12274,7 +12314,7 @@
      ]
     },
     "credit_note": {
-     "description": "Filter by the credit note the transaction came from",
+     "description": "Filter by the credit note the transaction came from.",
      "anyOf": [
       {
        "type": "string"
@@ -12526,10 +12566,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -12557,11 +12597,11 @@
        "type": "null"
       }
      ],
-     "description": "The code customers enter to redeem the discount."
+     "description": "The case-insensitive code customers enter to redeem the discount."
     },
     "active": {
      "type": "boolean",
-     "description": "Whether customers can redeem the code."
+     "description": "Whether the discount can be redeemed."
     },
     "amount_off": {
      "anyOf": [
@@ -12597,7 +12637,7 @@
        "type": "null"
       }
      ],
-     "description": "When the code expires, in milliseconds since the Unix epoch."
+     "description": "When the discount expires, in milliseconds since the Unix epoch."
     },
     "max_redemptions": {
      "anyOf": [
@@ -12608,12 +12648,12 @@
        "type": "null"
       }
      ],
-     "description": "How many times the code can be redeemed."
+     "description": "The limit on redemptions across all customers."
     },
     "times_redeemed": {
      "type": "integer",
      "minimum": 0,
-     "description": "How many times the code has been redeemed."
+     "description": "How many times the discount has been redeemed."
     },
     "minimum_amount": {
      "anyOf": [
@@ -12625,15 +12665,15 @@
        "type": "null"
       }
      ],
-     "description": "The smallest order, before discounts, the code applies to, in cents."
+     "description": "The order subtotal, in cents, a customer has to reach to use the discount."
     },
     "first_purchase_only": {
      "type": "boolean",
-     "description": "Whether the code works only on a customer's first purchase."
+     "description": "Whether the discount works only on a customer's first purchase."
     },
     "once_per_customer": {
      "type": "boolean",
-     "description": "Whether each customer can redeem the code only once."
+     "description": "Whether each customer can redeem the discount only once."
     },
     "applies_to": {
      "anyOf": [
@@ -12878,7 +12918,7 @@
      "type": "string"
     },
     "code": {
-     "description": "A discount code to redeem.",
+     "description": "A case-insensitive discount code to redeem.",
      "type": "string"
     }
    },
@@ -12894,10 +12934,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -12909,7 +12949,7 @@
     },
     "loss_accepted": {
      "type": "boolean",
-     "description": "Whether you accepted the loss."
+     "description": "Whether you accepted the loss instead of contesting the dispute."
     },
     "amount": {
      "type": "integer",
@@ -13377,7 +13417,7 @@
          "type": "null"
         }
        ],
-       "description": "How sending your evidence to the cardholder's bank went: `pending` while it's sent, `submitted` once the bank has it, and `failed` if it couldn't be sent."
+       "description": "Whether your evidence reached the cardholder's bank."
       }
      },
      "required": [
@@ -13397,7 +13437,7 @@
         "card",
         "us_bank_account"
        ],
-       "description": "`us_bank_account` for a bank debit returned after it succeeded."
+       "description": "The kind of payment that was disputed."
       },
       "card": {
        "anyOf": [
@@ -13410,7 +13450,7 @@
             "chargeback",
             "inquiry"
            ],
-           "description": "Whether the dispute is an inquiry or a chargeback."
+           "description": "How far the card dispute has gone."
           },
           "network_reason_code": {
            "description": "The reason code from the card network.",
@@ -13430,7 +13470,7 @@
          "type": "null"
         }
        ],
-       "description": "The card dispute, when `type` is `card`."
+       "description": "Details of a card dispute."
       },
       "us_bank_account": {
        "anyOf": [
@@ -13454,7 +13494,7 @@
          "type": "null"
         }
        ],
-       "description": "The returned debit, when `type` is `us_bank_account`."
+       "description": "Details of a returned bank debit."
       }
      },
      "required": [
@@ -13837,10 +13877,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -13908,7 +13948,7 @@
        "type": "null"
       }
      ],
-     "description": "The object before the event, for events that change an existing object."
+     "description": "The object as it was before the event."
     },
     "state": {
      "anyOf": [
@@ -14439,14 +14479,14 @@
      "description": "The object's type."
     },
     "live": {
-     "description": "`true` if the object is live, or `false` if it's in a sandbox.",
+     "description": "Whether the object belongs to a live environment.",
      "type": [
       "boolean",
       "null"
      ]
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -14455,15 +14495,14 @@
     },
     "name": {
      "type": "string",
-     "description": "The name of the file."
+     "description": "The filename the file downloads with."
     },
     "purpose": {
-     "description": "The file's intended use.",
      "$ref": "FilePurpose"
     },
     "size": {
      "type": "integer",
-     "description": "The size of the file in bytes."
+     "description": "The file's size, in bytes."
     }
    },
    "required": [
@@ -14622,7 +14661,8 @@
     "dispute_evidence",
     "invoice_attachment",
     "product_image"
-   ]
+   ],
+   "description": "What the file is used for."
   },
   "GooglePay": {
    "type": "object",
@@ -14640,7 +14680,7 @@
        "type": "null"
       }
      ],
-     "description": "`cryptogram_3ds` when Google Pay gave a network token authenticated on the customer's device, `pan_only` when it gave the card saved in the customer's Google a…"
+     "description": "The kind of card credential Google Pay provided."
     },
     "brand": {
      "description": "The card network, such as Visa or Mastercard.",
@@ -14658,10 +14698,10 @@
        "type": "null"
       }
      ],
-     "description": "For a network token, the last 4 digits of the device account number charged in place of the card number."
+     "description": "The last 4 digits of a network token's device account number, charged in place of the card number."
     },
     "eci": {
-     "description": "The electronic commerce indicator of a network token's cryptogram, when Google Pay gave one.",
+     "description": "The electronic commerce indicator (ECI) of a network token's cryptogram.",
      "type": [
       "string",
       "null"
@@ -14690,7 +14730,7 @@
      "description": "The expiration year of the device account number or card."
     },
     "fingerprint": {
-     "description": "Identifies the device account number, or for `pan_only` the card, as card fingerprints do.",
+     "description": "Identifies the device account number, or the card for `pan_only`.",
      "type": [
       "string",
       "null"
@@ -14719,7 +14759,7 @@
     "last4"
    ],
    "additionalProperties": false,
-   "description": "A Google Pay payment: a network token or a card saved in a Google account."
+   "description": "A Google Pay payment, made with a network token or a card saved in a Google account."
   },
   "GooglePayDetails": {
    "type": "object",
@@ -14729,7 +14769,7 @@
      "description": "The `paymentMethodData.tokenizationData.token` string from Google Pay, unchanged."
     },
     "card_network": {
-     "description": "`paymentMethodData.info.cardNetwork`, shown back to the customer.",
+     "description": "`paymentMethodData.info.cardNetwork`, used to display the card to the customer.",
      "type": "string",
      "enum": [
       "VISA",
@@ -14759,10 +14799,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -14774,7 +14814,7 @@
      "description": "When the object was last updated, in milliseconds since the Unix epoch."
     },
     "billing_address": {
-     "description": "The billing address for the invoice.",
+     "description": "The customer's billing address, shown on the invoice.",
      "$ref": "Address"
     },
     "customer": {
@@ -14794,7 +14834,7 @@
       "none",
       "exempt"
      ],
-     "description": "The customer's `tax_exempt` when the invoice was created."
+     "description": "The customer's `tax_exempt` status the invoice was taxed under."
     },
     "customer_reference": {
      "description": "The customer's purchase order number for the invoice.",
@@ -14857,7 +14897,7 @@
     },
     "number": {
      "type": "string",
-     "description": "The invoice number."
+     "description": "The number the customer sees on the invoice."
     },
     "shipping_details": {
      "description": "Where the invoice's order ships.",
@@ -14870,7 +14910,7 @@
      "$ref": "InvoiceCollectionMethod"
     },
     "subscription": {
-     "description": "The subscription this invoice bills, if any.",
+     "description": "The subscription the invoice bills.",
      "type": [
       "string",
       "null"
@@ -14880,7 +14920,7 @@
      "$ref": "InvoiceBillingReason"
     },
     "default_payment_method": {
-     "description": "The saved payment method charged when the invoice is collected automatically.",
+     "description": "The saved payment method to charge for the invoice, in place of the customer's `default_payment_method`.",
      "type": [
       "string",
       "null"
@@ -14888,7 +14928,7 @@
     },
     "attempt_count": {
      "type": "integer",
-     "description": "The number of automatic payment attempts made on the invoice."
+     "description": "How many times Bias has tried to charge the invoice automatically."
     },
     "next_attempt_at": {
      "anyOf": [
@@ -14899,7 +14939,7 @@
        "type": "null"
       }
      ],
-     "description": "When the next automatic payment attempt will run, as a Unix timestamp in milliseconds."
+     "description": "When Bias will next try to charge the invoice."
     },
     "due_at": {
      "anyOf": [
@@ -14910,7 +14950,7 @@
        "type": "null"
       }
      ],
-     "description": "The due date for the invoice as a Unix timestamp in milliseconds."
+     "description": "When payment of the invoice is due."
     },
     "days_until_due": {
      "anyOf": [
@@ -14945,7 +14985,7 @@
       ],
       "additionalProperties": false
      },
-     "description": "The default taxes used for line items without their own taxes."
+     "description": "The taxes applied to line items without their own."
     },
     "subtotal": {
      "type": "integer",
@@ -14953,7 +14993,7 @@
     },
     "tax_total": {
      "type": "integer",
-     "description": "The total amount of all taxes on the invoice."
+     "description": "The tax charged on the invoice."
     },
     "total": {
      "type": "integer",
@@ -14961,20 +15001,20 @@
     },
     "amount_billed": {
      "type": "integer",
-     "description": "What the invoice bills: `total` less `balance_applied` and credit notes' `pre_payment_amount`."
+     "description": "The amount the customer has to pay, after their balance and credit notes come off `total`."
     },
     "balance_applied": {
      "type": "integer",
-     "description": "How much of the customer's balance the invoice applied when it was finalized."
+     "description": "The customer balance used toward the invoice."
     },
     "amount_paid": {
      "type": "integer",
-     "description": "The amount succeeded payments received."
+     "description": "The amount the invoice's payments have collected."
     },
     "amount_remaining": {
      "type": "integer",
      "minimum": 0,
-     "description": "What's left to pay, and what a payment without an `amount` charges: `amount_billed` less `amount_paid` and what payments still in flight hold (processing payme…"
+     "description": "What's left to pay after the invoice's payments, including those still in progress."
     },
     "external_sync": {
      "anyOf": [
@@ -14985,7 +15025,7 @@
        "type": "null"
       }
      ],
-     "description": "The external system record linked to this invoice, if any."
+     "description": "The invoice's record in a connected accounting system."
     },
     "attachments": {
      "anyOf": [
@@ -15030,14 +15070,14 @@
      "description": "Expandable."
     },
     "memo": {
-     "description": "A memo displayed on the invoice.",
+     "description": "A note to the customer, shown on the invoice.",
      "type": [
       "string",
       "null"
      ]
     },
     "footer": {
-     "description": "Footer text displayed on the invoice.",
+     "description": "Text shown at the bottom of the invoice.",
      "type": [
       "string",
       "null"
@@ -15067,7 +15107,7 @@
        "type": "null"
       }
      ],
-     "description": "The URL of the hosted payment page for this invoice."
+     "description": "The hosted page where the customer pays the invoice."
     }
    },
    "required": [
@@ -15243,7 +15283,7 @@
    "type": "object",
    "properties": {
     "created_at": {
-     "description": "Filter by the invoice's creation date",
+     "description": "Filter by the invoice's creation date.",
      "anyOf": [
       {
        "type": "integer",
@@ -15271,7 +15311,7 @@
      ]
     },
     "updated_at": {
-     "description": "Filter by the invoice's last update date",
+     "description": "Filter by the invoice's last update date.",
      "anyOf": [
       {
        "type": "integer",
@@ -15299,7 +15339,7 @@
      ]
     },
     "due_at": {
-     "description": "Filter by the invoice's due date",
+     "description": "Filter by the invoice's due date.",
      "anyOf": [
       {
        "type": "integer",
@@ -15327,7 +15367,7 @@
      ]
     },
     "number": {
-     "description": "Filter by the invoice's number",
+     "description": "Filter by the invoice's number.",
      "anyOf": [
       {
        "type": "string"
@@ -15353,7 +15393,7 @@
      ]
     },
     "customer": {
-     "description": "Filter by customer ID",
+     "description": "Filter by the invoice's customer.",
      "anyOf": [
       {
        "type": "string"
@@ -15427,7 +15467,7 @@
      ]
     },
     "status": {
-     "description": "Filter by invoice status",
+     "description": "Filter by the invoice's status.",
      "anyOf": [
       {
        "$ref": "InvoiceStatus"
@@ -15501,7 +15541,7 @@
      ]
     },
     "subscription": {
-     "description": "Filter by the ID of the subscription that billed the invoice",
+     "description": "Filter by the subscription the invoice bills.",
      "anyOf": [
       {
        "type": "string"
@@ -15575,7 +15615,7 @@
      ]
     },
     "billing_reason": {
-     "description": "Filter by why the invoice was created",
+     "description": "Filter by why the invoice was created.",
      "anyOf": [
       {
        "$ref": "InvoiceBillingReason"
@@ -15672,10 +15712,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -15691,7 +15731,7 @@
     },
     "quantity": {
      "type": "number",
-     "description": "The quantity of the line item."
+     "description": "The number of units billed."
     },
     "unit_of_measure": {
      "anyOf": [
@@ -15712,7 +15752,7 @@
      ]
     },
     "description": {
-     "description": "The line item's description.",
+     "description": "A description shown to the customer with the line item.",
      "type": [
       "string",
       "null"
@@ -15727,11 +15767,11 @@
        "type": "null"
       }
      ],
-     "description": "The unit amount in whole cents when the line item was created, or `null` when it has a fraction of a cent."
+     "description": "The price per unit in whole cents."
     },
     "unit_amount_decimal": {
      "type": "string",
-     "description": "The unit amount in cents when the line item was created, as a decimal string with up to six decimal places, such as `\"0.35\"` for $0.0035."
+     "description": "The price per unit in cents, as a decimal string such as `\"0.35\"` for $0.0035."
     },
     "price": {
      "anyOf": [
@@ -15812,14 +15852,14 @@
        "type": "null"
       }
      ],
-     "description": "The line item's own taxes, or `null` when it pays its invoice's `default_taxes`."
+     "description": "The taxes set on this line item, in place of its invoice's `default_taxes`."
     },
     "tax_amounts": {
      "type": "array",
      "items": {
       "$ref": "TaxAmount"
      },
-     "description": "The tax charged on this line item, per tax, including the invoice's default taxes."
+     "description": "The amount charged on this line item for each tax."
     },
     "subtotal": {
      "type": "integer",
@@ -15836,11 +15876,11 @@
        "properties": {
         "start": {
          "type": "integer",
-         "description": "Start of the billed period, as a Unix timestamp in milliseconds."
+         "description": "When the billed period starts."
         },
         "end": {
          "type": "integer",
-         "description": "End of the billed period, as a Unix timestamp in milliseconds."
+         "description": "When the billed period ends."
         }
        },
        "required": [
@@ -15856,7 +15896,7 @@
      "description": "The period a subscription line item bills for."
     },
     "subscription_item": {
-     "description": "The subscription item this line item bills, if any.",
+     "description": "The subscription item this line item bills.",
      "type": [
       "string",
       "null"
@@ -15949,7 +15989,7 @@
    "type": "object",
    "properties": {
     "product": {
-     "description": "The ID of the product to bill at `unit_amount`.",
+     "description": "The product to bill at a custom amount.",
      "type": [
       "string",
       "null"
@@ -15967,14 +16007,14 @@
      ]
     },
     "description": {
-     "description": "The line item's description.",
+     "description": "A description shown to the customer with the line item.",
      "type": [
       "string",
       "null"
      ]
     },
     "unit_amount": {
-     "description": "The unit amount in whole cents.",
+     "description": "The price per unit, in whole cents.",
      "anyOf": [
       {
        "type": "integer",
@@ -15990,7 +16030,7 @@
      "anyOf": [
       {
        "type": "string",
-       "description": "The unit amount in cents as a decimal string with up to six decimal places, such as `\"0.35\"` for $0.0035 per unit."
+       "description": "The price per unit when it has a fraction of a cent, as a decimal string of cents such as `\"0.35\"` for $0.0035."
       },
       {
        "type": "null"
@@ -16019,10 +16059,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -16049,7 +16089,7 @@
       "multi_use",
       "single_use"
      ],
-     "description": "Always `multi_use`: the mandate covers later debits, such as subscription renewals."
+     "description": "Always `multi_use`, which covers later debits such as subscription renewals."
     },
     "customer_acceptance": {
      "type": "object",
@@ -16060,21 +16100,21 @@
         "online",
         "offline"
        ],
-       "description": "`online` if the customer accepted on a website or app, or `offline` if you collected the authorization another way, such as in writing."
+       "description": "How the customer authorized the debits."
       },
       "accepted_at": {
        "type": "integer",
        "description": "When the customer authorized the debits."
       },
       "ip_address": {
-       "description": "The customer's IP address, for `online` acceptance.",
+       "description": "The customer's IP address when they authorized the debits.",
        "type": [
         "string",
         "null"
        ]
       },
       "user_agent": {
-       "description": "The customer's browser user agent, for `online` acceptance.",
+       "description": "The customer's browser user agent when they authorized the debits.",
        "type": [
         "string",
         "null"
@@ -16095,7 +16135,7 @@
      "description": "The authorization the customer agreed to."
     },
     "replaced_by": {
-     "description": "For a `replaced` mandate, the mandate that replaced it.",
+     "description": "The mandate that replaced this one.",
      "type": [
       "string",
       "null"
@@ -16125,7 +16165,7 @@
       "type": {
        "type": "string",
        "const": "online",
-       "description": "The customer accepted on your website or app."
+       "description": "The customer accepted on a website or app."
       },
       "accepted_at": {
        "description": "When the customer authorized the debits.",
@@ -16452,7 +16492,7 @@
      "null"
     ]
    },
-   "description": "Your own key-value data on the object."
+   "description": "Arbitrary key-value data for your own use."
   },
   "MetadataInput": {
    "type": "object",
@@ -16464,7 +16504,7 @@
      "null"
     ]
    },
-   "description": "Your own key-value data on the object."
+   "description": "Arbitrary key-value data for your own use."
   },
   "NumberFilter": {
    "type": "object",
@@ -16500,10 +16540,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -16524,116 +16564,11 @@
     },
     "amount_refunded": {
      "type": "integer",
-     "description": "The amount refunded."
+     "description": "The amount already refunded."
     },
     "amount_refundable": {
      "type": "integer",
-     "description": "The amount that can still be refunded: `amount_received`, less `amount_refunded` and what lost disputes took back."
-    },
-    "fees": {
-     "type": "object",
-     "properties": {
-      "interchange": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The interchange fee set by the card network."
-      },
-      "chargeback": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The fee for a chargeback on the payment."
-      },
-      "platform": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The platform fee."
-      },
-      "network": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The card network's fees."
-      },
-      "processor": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The processor's fees."
-      },
-      "ach_return": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The fee for an ACH return of the payment."
-      },
-      "other": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "Fees the processor reports in its total but not as any of the fees above."
-      },
-      "total": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The total of the payment's fees, the sum of the fees above."
-      }
-     },
-     "required": [
-      "interchange",
-      "chargeback",
-      "platform",
-      "network",
-      "processor",
-      "ach_return",
-      "other",
-      "total"
-     ],
-     "additionalProperties": false,
-     "description": "The fees on the payment, in cents: positive when charged, negative when credited back."
+     "description": "The amount that can still be refunded."
     },
     "capture_method": {
      "type": "string",
@@ -16641,18 +16576,7 @@
       "automatic",
       "manual"
      ],
-     "description": "When to capture the payment."
-    },
-    "capture_before": {
-     "anyOf": [
-      {
-       "type": "integer"
-      },
-      {
-       "type": "null"
-      }
-     ],
-     "description": "When the authorization of a `requires_capture` payment expires, 7 days after it was authorized."
+     "description": "When to capture the payment's funds."
     },
     "customer": {
      "anyOf": [
@@ -16673,7 +16597,7 @@
      "description": "Expandable."
     },
     "description": {
-     "description": "What the payment is for.",
+     "description": "A note for your own reference, not shown to the customer.",
      "type": [
       "string",
       "null"
@@ -16710,7 +16634,7 @@
            "type": "null"
           }
          ],
-         "description": "Why the payment was declined, as a decline code."
+         "description": "The decline code for the failure."
         },
         "network_decline_code": {
          "description": "The raw decline code from the card network, or the Nacha return code for a bank account debit or refund.",
@@ -16732,7 +16656,7 @@
        "type": "null"
       }
      ],
-     "description": "Why a `failed` payment failed, or why the latest capture or cancellation of a `requires_capture` payment failed, once that's known."
+     "description": "Why the payment failed, or why it couldn't be captured or canceled."
     },
     "payment_method": {
      "anyOf": [
@@ -16745,8 +16669,11 @@
      ],
      "description": "Expandable."
     },
+    "payment_method_details": {
+     "$ref": "PaymentPaymentMethodDetails"
+    },
     "statement_descriptor": {
-     "description": "The statement descriptor for the payment.",
+     "description": "The text on the customer's statement for this payment.",
      "type": [
       "string",
       "null"
@@ -16754,6 +16681,17 @@
     },
     "status": {
      "$ref": "PaymentStatus"
+    },
+    "failed_at": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "When the payment failed."
     },
     "next_action": {
      "anyOf": [
@@ -16764,18 +16702,7 @@
        "type": "null"
       }
      ],
-     "description": "What the customer has to do for the payment to continue."
-    },
-    "three_d_secure": {
-     "anyOf": [
-      {
-       "$ref": "PaymentThreeDSecure"
-      },
-      {
-       "type": "null"
-      }
-     ],
-     "description": "The 3D Secure authentication of the cardholder."
+     "description": "The step to take the customer through before the payment can continue."
     },
     "dispute": {
      "anyOf": [
@@ -16804,10 +16731,7 @@
        "type": "null"
       }
      ],
-     "description": "The risk decision made by your fraud rules."
-    },
-    "fraud_details": {
-     "$ref": "PaymentFraudDetails"
+     "description": "Your fraud rules' decision on the payment."
     },
     "session": {
      "anyOf": [
@@ -16845,55 +16769,15 @@
      ],
      "description": "Expandable."
     },
-    "mandate": {
-     "description": "The mandate a bank account debit was made under.",
-     "type": [
-      "string",
-      "null"
-     ]
-    },
-    "off_session": {
-     "description": "Whether the payment was merchant-initiated, without the customer present.",
-     "type": [
-      "boolean",
-      "null"
-     ]
-    },
-    "recurring": {
-     "description": "Whether the merchant-initiated payment is one in a series charged on a fixed schedule, such as a subscription renewal.",
-     "type": [
-      "boolean",
-      "null"
-     ]
-    },
-    "ach_return": {
+    "initiator": {
      "anyOf": [
       {
-       "type": "object",
-       "properties": {
-        "return_code": {
-         "description": "The Nacha return code, such as `R01`.",
-         "type": [
-          "string",
-          "null"
-         ]
-        },
-        "returned_at": {
-         "type": "integer",
-         "description": "When the debit was returned."
-        }
-       },
-       "required": [
-        "return_code",
-        "returned_at"
-       ],
-       "additionalProperties": false
+       "$ref": "PaymentInitiator"
       },
       {
        "type": "null"
       }
-     ],
-     "description": "Present when the customer's bank returned the debit."
+     ]
     }
    },
    "required": [
@@ -16906,27 +16790,60 @@
     "amount_received",
     "amount_refunded",
     "amount_refundable",
-    "fees",
     "capture_method",
-    "capture_before",
     "customer",
     "description",
     "metadata",
     "payment_error",
     "payment_method",
+    "payment_method_details",
     "statement_descriptor",
     "status",
+    "failed_at",
     "next_action",
-    "three_d_secure",
     "dispute",
     "risk",
-    "fraud_details",
     "session",
     "invoice",
-    "mandate",
-    "off_session",
-    "recurring",
-    "ach_return"
+    "initiator"
+   ],
+   "additionalProperties": false
+  },
+  "PaymentAuthentication": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string",
+     "enum": [
+      "three_d_secure",
+      "apple_pay",
+      "google_pay"
+     ],
+     "description": "What verified the customer."
+    },
+    "liability_shifted": {
+     "description": "Whether the card's bank, instead of you, bears fraud chargebacks on the payment.",
+     "type": [
+      "boolean",
+      "null"
+     ]
+    },
+    "three_d_secure": {
+     "anyOf": [
+      {
+       "$ref": "PaymentThreeDSecure"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "The result of the 3D Secure authentication."
+    }
+   },
+   "required": [
+    "type",
+    "liability_shifted",
+    "three_d_secure"
    ],
    "additionalProperties": false
   },
@@ -17928,29 +17845,13 @@
    },
    "additionalProperties": false
   },
-  "PaymentFraudDetails": {
-   "type": "object",
-   "properties": {
-    "user_report": {
-     "anyOf": [
-      {
-       "type": "string",
-       "enum": [
-        "fraudulent",
-        "safe"
-       ]
-      },
-      {
-       "type": "null"
-      }
-     ],
-     "description": "What you reported the payment as."
-    }
-   },
-   "required": [
-    "user_report"
+  "PaymentInitiator": {
+   "type": "string",
+   "enum": [
+    "customer",
+    "merchant"
    ],
-   "additionalProperties": false
+   "description": "Which party initiated this payment."
   },
   "PaymentMethod": {
    "type": "object",
@@ -17961,12 +17862,12 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "created_at": {
      "type": "integer",
@@ -17977,7 +17878,8 @@
      "description": "Whether the payment method is saved for future payments."
     },
     "allow_redisplay": {
-     "$ref": "PaymentMethodAllowRedisplay"
+     "type": "boolean",
+     "description": "Whether it can be offered to returning customers at checkout."
     },
     "billing_details": {
      "type": "object",
@@ -18075,7 +17977,7 @@
        "type": "null"
       }
      ],
-     "description": "The Apple Pay details, when `type` is `apple_pay`."
+     "description": "Details of an Apple Pay payment method."
     },
     "card": {
      "anyOf": [
@@ -18086,7 +17988,7 @@
        "type": "null"
       }
      ],
-     "description": "The card, when `type` is `card`."
+     "description": "Details of a card."
     },
     "google_pay": {
      "anyOf": [
@@ -18097,7 +17999,7 @@
        "type": "null"
       }
      ],
-     "description": "The Google Pay details, when `type` is `google_pay`."
+     "description": "Details of a Google Pay payment method."
     },
     "us_bank_account": {
      "anyOf": [
@@ -18108,7 +18010,7 @@
        "type": "null"
       }
      ],
-     "description": "The bank account, when `type` is `us_bank_account`."
+     "description": "Details of a US bank account."
     },
     "type": {
      "type": "string",
@@ -18156,14 +18058,6 @@
    ],
    "additionalProperties": false
   },
-  "PaymentMethodAllowRedisplay": {
-   "type": "string",
-   "enum": [
-    "always",
-    "limited"
-   ],
-   "description": "Whether the payment method is offered to the customer at checkout and on invoice payment pages."
-  },
   "PaymentMethodApplePayCreate": {
    "type": "object",
    "properties": {
@@ -18200,8 +18094,9 @@
      ]
     },
     "allow_redisplay": {
-     "description": "Whether the payment method is offered to the customer at checkout and on invoice payment pages.",
-     "$ref": "PaymentMethodAllowRedisplay"
+     "description": "Whether it can be offered to returning customers at checkout.",
+     "default": false,
+     "type": "boolean"
     }
    },
    "required": [
@@ -18473,8 +18368,9 @@
      ]
     },
     "allow_redisplay": {
-     "description": "Whether the payment method is offered to the customer at checkout and on invoice payment pages.",
-     "$ref": "PaymentMethodAllowRedisplay"
+     "description": "Whether it can be offered to returning customers at checkout.",
+     "default": false,
+     "type": "boolean"
     }
    },
    "required": [
@@ -18488,7 +18384,7 @@
     "type": {
      "type": "string",
      "const": "three_d_secure",
-     "description": "The kind of step."
+     "description": "The step the payment is waiting on."
     },
     "three_d_secure": {
      "type": "object",
@@ -18496,14 +18392,14 @@
       "url": {
        "type": "string",
        "format": "uri",
-       "description": "The Bias-hosted page where the customer authenticates."
+       "description": "The page where the customer authenticates."
       }
      },
      "required": [
       "url"
      ],
      "additionalProperties": false,
-     "description": "How to complete 3D Secure."
+     "description": "Details of the 3D Secure step."
     }
    },
    "required": [
@@ -18512,18 +18408,138 @@
    ],
    "additionalProperties": false
   },
+  "PaymentPaymentMethodDetails": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string",
+     "enum": [
+      "card",
+      "us_bank_account",
+      "apple_pay",
+      "google_pay"
+     ],
+     "description": "The type of payment method."
+    },
+    "card": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "authorization_code": {
+         "description": "The bank's approval code.",
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "acquirer_reference_number": {
+         "description": "The reference number (ARN) banks use to trace the payment.",
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "capture_before": {
+         "anyOf": [
+          {
+           "type": "integer"
+          },
+          {
+           "type": "null"
+          }
+         ],
+         "description": "The deadline to capture the payment before its authorization expires."
+        },
+        "authentication": {
+         "anyOf": [
+          {
+           "$ref": "PaymentAuthentication"
+          },
+          {
+           "type": "null"
+          }
+         ],
+         "description": "The customer's verification by 3D Secure or a wallet."
+        }
+       },
+       "required": [
+        "authorization_code",
+        "acquirer_reference_number",
+        "capture_before",
+        "authentication"
+       ],
+       "additionalProperties": false
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Details of a card payment."
+    },
+    "us_bank_account": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mandate": {
+         "description": "The mandate the debit was made under.",
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "returned_at": {
+         "anyOf": [
+          {
+           "type": "integer"
+          },
+          {
+           "type": "null"
+          }
+         ],
+         "description": "When the bank returned the debit."
+        },
+        "return_code": {
+         "description": "The Nacha return code of a returned debit, such as `R01`.",
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mandate",
+        "returned_at",
+        "return_code"
+       ],
+       "additionalProperties": false
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Details of a bank debit."
+    }
+   },
+   "required": [
+    "type",
+    "card",
+    "us_bank_account"
+   ],
+   "additionalProperties": false
+  },
   "PaymentRisk": {
    "type": "object",
    "properties": {
     "score": {
      "type": "integer",
-     "description": "From 0 to 100."
+     "description": "How risky the payment looks, from 0 to 100."
     },
     "level": {
      "$ref": "RiskLevel"
     },
     "decision": {
-     "description": "What the rules decided, whatever the issuer then did.",
      "$ref": "RiskOutcome"
     },
     "rule": {
@@ -18562,7 +18578,7 @@
        "type": "null"
       }
      ],
-     "description": "The rule that decided."
+     "description": "The fraud rule responsible for the decision."
     }
    },
    "required": [
@@ -18598,7 +18614,7 @@
       "unavailable",
       "abandoned"
      ],
-     "description": "How the authentication ended."
+     "description": "The authentication's outcome."
     },
     "flow": {
      "anyOf": [
@@ -18616,29 +18632,25 @@
      "description": "Whether the customer saw a challenge."
     },
     "version": {
-     "description": "The 3D Secure protocol version the authentication ran on, such as `2.2.0`.",
+     "description": "The 3D Secure version the authentication ran on, such as `2.2.0`.",
      "type": [
       "string",
       "null"
      ]
     },
     "electronic_commerce_indicator": {
-     "description": "The two-digit electronic commerce indicator (ECI) the authentication returned, which tells the card network how the cardholder was verified: `05` authenticated…",
+     "description": "The electronic commerce indicator (ECI), the card network's code for how the cardholder was verified.",
      "type": [
       "string",
       "null"
      ]
     },
     "transaction_id": {
-     "description": "The card network's directory server transaction ID for the authentication, which the card's bank and the network know it by.",
+     "description": "The ID the card network and the card's bank know the authentication by.",
      "type": [
       "string",
       "null"
      ]
-    },
-    "liability_shifted": {
-     "type": "boolean",
-     "description": "Whether fraud chargebacks on the payment are the card's bank's to bear instead of yours."
     }
    },
    "required": [
@@ -18646,8 +18658,7 @@
     "flow",
     "version",
     "electronic_commerce_indicator",
-    "transaction_id",
-    "liability_shifted"
+    "transaction_id"
    ],
    "additionalProperties": false
   },
@@ -18660,11 +18671,11 @@
     },
     "electronic_commerce_indicator": {
      "type": "string",
-     "description": "The two-digit electronic commerce indicator (ECI): `05` or `06` for Visa, Amex and Discover, `02` or `01` for Mastercard."
+     "description": "The electronic commerce indicator (ECI) from the authentication, such as `05`."
     },
     "cryptogram": {
      "type": "string",
-     "description": "The authentication value (CAVV, or AAV for Mastercard): its 20 bytes in base64, 28 characters ending in `=`."
+     "description": "The authentication value (CAVV, or AAV for Mastercard), in base64."
     },
     "transaction_id": {
      "type": "string",
@@ -18685,6 +18696,7 @@
    "properties": {
     "request": {
      "description": "When to authenticate the cardholder.",
+     "default": "automatic",
      "type": "string",
      "enum": [
       "automatic",
@@ -18692,7 +18704,7 @@
      ]
     },
     "external": {
-     "description": "The result of a 3D Secure authentication you ran elsewhere, to authorize the card with.",
+     "description": "The result of a 3D Secure authentication you ran with another provider.",
      "$ref": "PaymentThreeDSecureExternal"
     }
    },
@@ -18708,10 +18720,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -18739,7 +18751,7 @@
     },
     "active": {
      "type": "boolean",
-     "description": "Whether the price can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices."
+     "description": "Whether the price can be used for new purchases."
     },
     "name": {
      "anyOf": [
@@ -18762,11 +18774,11 @@
        "type": "null"
       }
      ],
-     "description": "The amount in whole cents, or `null` when the amount has a fraction of a cent."
+     "description": "The amount, in whole cents."
     },
     "amount_decimal": {
      "type": "string",
-     "description": "The amount in cents as a decimal string, with up to six decimal places, such as `\"0.35\"` for $0.0035."
+     "description": "The amount in cents as a decimal string, for amounts with a fraction of a cent, such as `\"0.35\"` for $0.0035."
     },
     "type": {
      "type": "string",
@@ -18774,7 +18786,7 @@
       "one_time",
       "recurring"
      ],
-     "description": "`one_time` for a single purchase, or `recurring` for a subscription."
+     "description": "Whether the price is charged once or on a schedule."
     },
     "recurring": {
      "anyOf": [
@@ -18785,7 +18797,7 @@
        "type": "null"
       }
      ],
-     "description": "The billing period of a `recurring` price."
+     "description": "How often a `recurring` price bills."
     },
     "metadata": {
      "$ref": "Metadata"
@@ -18938,7 +18950,7 @@
      ]
     },
     "active": {
-     "description": "Filter by the price's active status.",
+     "description": "Filter by whether the price is active.",
      "$ref": "BooleanFilter"
     },
     "amount": {
@@ -19005,7 +19017,7 @@
     "interval_count": {
      "type": "integer",
      "minimum": 1,
-     "description": "The number of intervals in each billing period."
+     "description": "The number of intervals in each billing period, such as `3` with `interval: month` to bill every three months."
     }
    },
    "required": [
@@ -19022,7 +19034,7 @@
     },
     "interval_count": {
      "default": 1,
-     "description": "The number of intervals in each billing period.",
+     "description": "The number of intervals in each billing period, such as `3` with `interval: month` to bill every three months.",
      "type": "integer",
      "minimum": 1
     }
@@ -19042,10 +19054,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -19062,7 +19074,7 @@
     },
     "name": {
      "type": "string",
-     "description": "The product's name."
+     "description": "The product's name, shown to customers at checkout and on invoices."
     },
     "description": {
      "anyOf": [
@@ -19073,7 +19085,7 @@
        "type": "null"
       }
      ],
-     "description": "The product's description."
+     "description": "Details shown to customers under the product's name."
     },
     "sku": {
      "anyOf": [
@@ -19084,7 +19096,7 @@
        "type": "null"
       }
      ],
-     "description": "The product's stock keeping unit (SKU)."
+     "description": "Your stock keeping unit (SKU) for the product."
     },
     "commodity_code": {
      "anyOf": [
@@ -19106,14 +19118,14 @@
        "type": "null"
       }
      ],
-     "description": "The unit the product's quantity counts, which its line items default to."
+     "description": "The unit the product is sold by, which its line items default to."
     },
     "attributes": {
      "$ref": "ProductAttributes"
     },
     "active": {
      "type": "boolean",
-     "description": "Whether the product can be used for new purchases: in checkout sessions, subscriptions and lines added to invoices."
+     "description": "Whether the product can be used for new purchases."
     },
     "source": {
      "anyOf": [
@@ -19483,7 +19495,7 @@
      ]
     },
     "active": {
-     "description": "Filter by the product's active status.",
+     "description": "Filter by whether the product is active.",
      "$ref": "BooleanFilter"
     }
    },
@@ -19508,12 +19520,12 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "created_at": {
      "type": "integer",
@@ -19523,89 +19535,8 @@
      "type": "integer",
      "description": "The amount refunded, in cents."
     },
-    "fees": {
-     "type": "object",
-     "properties": {
-      "interchange": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The interchange on the refund."
-      },
-      "platform": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The platform fee."
-      },
-      "network": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The card network's fees."
-      },
-      "processor": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The processor's fees."
-      },
-      "other": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "Fees the processor reports in its total but not as any of the fees above."
-      },
-      "total": {
-       "anyOf": [
-        {
-         "type": "integer"
-        },
-        {
-         "type": "null"
-        }
-       ],
-       "description": "The total of the refund's fees, the sum of the fees above."
-      }
-     },
-     "required": [
-      "interchange",
-      "platform",
-      "network",
-      "processor",
-      "other",
-      "total"
-     ],
-     "additionalProperties": false,
-     "description": "The fees on the refund, in cents: positive when charged, negative when credited back."
-    },
     "failed_reason": {
-     "description": "Why a `failed` refund failed.",
+     "description": "Why the refund failed.",
      "type": [
       "string",
       "null"
@@ -19642,7 +19573,6 @@
     "live",
     "created_at",
     "amount",
-    "fees",
     "failed_reason",
     "reason",
     "payment",
@@ -19982,11 +19912,11 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "live": {
-     "description": "`true` if the object is live, or `false` if it's in a sandbox.",
+     "description": "Whether the object belongs to a live environment.",
      "type": [
       "boolean",
       "null"
@@ -20021,7 +19951,7 @@
        "type": "null"
       }
      ],
-     "description": "The operation that made the request: an API operation, such as `[\"customers\", \"create\"]`, or `[\"assistant\", <tool>]` for a write the dashboard assistant made,…"
+     "description": "The API operation the request called, such as `[\"customers\", \"create\"]`."
     },
     "request": {
      "type": "object",
@@ -20088,7 +20018,7 @@
          "type": "null"
         }
        ],
-       "description": "The HTTP status code."
+       "description": "The HTTP status code of the response."
       }
      },
      "required": [
@@ -20183,7 +20113,7 @@
     "elevated",
     "high"
    ],
-   "description": "How risky the payment looks, from its score."
+   "description": "The risk band the score falls in."
   },
   "RiskOutcome": {
    "type": "string",
@@ -20193,7 +20123,7 @@
     "blocked",
     "challenged"
    ],
-   "description": "What the risk rules decided."
+   "description": "Your fraud rules' decision."
   },
   "SessionDeviceType": {
    "type": "string",
@@ -20254,7 +20184,7 @@
     "allowed_countries"
    ],
    "additionalProperties": false,
-   "description": "Where checkout collects a shipping address."
+   "description": "Whether checkout collects a shipping address, and from which countries."
   },
   "ShippingAddressCollectionInput": {
    "anyOf": [
@@ -20265,6 +20195,7 @@
      "type": "object",
      "properties": {
       "allowed_countries": {
+       "description": "The countries a shipping address can be in.",
        "type": "array",
        "items": {
         "$ref": "CountryCode"
@@ -20274,7 +20205,7 @@
      "additionalProperties": false
     }
    ],
-   "description": "Where checkout collects a shipping address."
+   "description": "Whether checkout collects a shipping address, and from which countries."
   },
   "ShippingDetails": {
    "type": "object",
@@ -20395,10 +20326,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -20455,7 +20386,7 @@
            "type": "null"
           }
          ],
-         "description": "The upper bound of the estimated range, inclusive."
+         "description": "The longest delivery is estimated to take."
         },
         "minimum": {
          "anyOf": [
@@ -20481,7 +20412,7 @@
            "type": "null"
           }
          ],
-         "description": "The lower bound of the estimated range, inclusive."
+         "description": "The shortest delivery is estimated to take."
         }
        },
        "required": [
@@ -20524,7 +20455,7 @@
    "type": "object",
    "properties": {
     "created_at": {
-     "description": "Filter by the shipping rate's creation date",
+     "description": "Filter by the shipping rate's creation date.",
      "anyOf": [
       {
        "type": "integer",
@@ -20552,11 +20483,11 @@
      ]
     },
     "active": {
-     "description": "Filter by the shipping rate's active status",
+     "description": "Filter by whether the shipping rate is active.",
      "$ref": "BooleanFilter"
     },
     "display_name": {
-     "description": "Filter by the shipping rate's display name",
+     "description": "Filter by the shipping rate's display name.",
      "anyOf": [
       {
        "type": "string"
@@ -20582,7 +20513,7 @@
      ]
     },
     "amount": {
-     "description": "Filter by the shipping rate's amount",
+     "description": "Filter by the shipping rate's amount.",
      "anyOf": [
       {
        "type": "number"
@@ -20644,10 +20575,10 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -20680,7 +20611,7 @@
      "description": "The prices the subscription bills each period."
     },
     "default_payment_method": {
-     "description": "The saved payment method charged for renewals.",
+     "description": "The saved payment method charged for renewals, in place of the customer's `default_payment_method`.",
      "type": [
       "string",
       "null"
@@ -20698,7 +20629,7 @@
        "type": "null"
       }
      ],
-     "description": "For `send_invoice` subscriptions, the number of days the customer has to pay each invoice."
+     "description": "The number of days the customer has to pay each invoice they're sent."
     },
     "default_taxes": {
      "type": "array",
@@ -20726,7 +20657,7 @@
     },
     "billing_cycle_anchor_at": {
      "type": "integer",
-     "description": "When billing periods are counted from, as a Unix timestamp in milliseconds."
+     "description": "The reference point for billing periods, which sets the day and time of each renewal."
     },
     "next_renewal_at": {
      "anyOf": [
@@ -20737,7 +20668,7 @@
        "type": "null"
       }
      ],
-     "description": "When the subscription next renews, as a Unix timestamp in milliseconds."
+     "description": "When the subscription next renews."
     },
     "trial_start_at": {
      "anyOf": [
@@ -20748,7 +20679,7 @@
        "type": "null"
       }
      ],
-     "description": "When the trial started, as a Unix timestamp in milliseconds."
+     "description": "When the trial started."
     },
     "trial_end_at": {
      "anyOf": [
@@ -20759,7 +20690,7 @@
        "type": "null"
       }
      ],
-     "description": "When the trial ends and the first paid period starts, as a Unix timestamp in milliseconds."
+     "description": "When the trial ends and the first paid period starts."
     },
     "cancel_at": {
      "anyOf": [
@@ -20770,7 +20701,7 @@
        "type": "null"
       }
      ],
-     "description": "When the subscription is scheduled to be canceled, as a Unix timestamp in milliseconds."
+     "description": "When the subscription is scheduled to be canceled."
     },
     "cancel_at_period_end": {
      "type": "boolean",
@@ -20785,7 +20716,7 @@
        "type": "null"
       }
      ],
-     "description": "When the subscription was canceled or scheduled to be canceled, as a Unix timestamp in milliseconds."
+     "description": "When the subscription was canceled or scheduled to be canceled."
     },
     "ended_at": {
      "anyOf": [
@@ -20796,7 +20727,7 @@
        "type": "null"
       }
      ],
-     "description": "When a canceled subscription ended, as a Unix timestamp in milliseconds."
+     "description": "When a canceled subscription ended."
     },
     "cancellation_details": {
      "$ref": "SubscriptionCancellationDetails"
@@ -20810,7 +20741,7 @@
        "type": "null"
       }
      ],
-     "description": "For an `incomplete` subscription, when it's canceled if its first invoice still isn't paid, as a Unix timestamp in milliseconds."
+     "description": "The deadline to pay the first invoice before an `incomplete` subscription is canceled."
     },
     "payment_retries_end_at": {
      "anyOf": [
@@ -20821,7 +20752,7 @@
        "type": "null"
       }
      ],
-     "description": "For a `past_due` subscription, when payment retries stop, as a Unix timestamp in milliseconds."
+     "description": "When payment retries stop on a `past_due` subscription."
     },
     "resumes_at": {
      "anyOf": [
@@ -20832,7 +20763,7 @@
        "type": "null"
       }
      ],
-     "description": "When a paused subscription resumes on its own, as a Unix timestamp in milliseconds."
+     "description": "When a paused subscription resumes on its own."
     },
     "skipped_period": {
      "anyOf": [
@@ -20841,11 +20772,11 @@
        "properties": {
         "start": {
          "type": "integer",
-         "description": "Start of the skipped period, as a Unix timestamp in milliseconds."
+         "description": "Start of the skipped period."
         },
         "end": {
          "type": "integer",
-         "description": "End of the skipped period, as a Unix timestamp in milliseconds."
+         "description": "End of the skipped period, when the subscription renews."
         }
        },
        "required": [
@@ -21012,7 +20943,8 @@
      ]
     }
    },
-   "additionalProperties": false
+   "additionalProperties": false,
+   "description": "The customer's feedback on canceling."
   },
   "SubscriptionCancellationFeedback": {
    "type": "string",
@@ -21066,7 +20998,7 @@
      ]
     },
     "items": {
-     "description": "Items are always included; expand their prices' products.",
+     "description": "Expands the products of the items' prices.",
      "anyOf": [
       {
        "type": "object",
@@ -21567,7 +21499,7 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -21591,11 +21523,11 @@
      "properties": {
       "start": {
        "type": "integer",
-       "description": "Start of the current billing period, as a Unix timestamp in milliseconds."
+       "description": "Start of the current billing period."
       },
       "end": {
        "type": "integer",
-       "description": "End of the current billing period, as a Unix timestamp in milliseconds."
+       "description": "End of the current billing period."
       }
      },
      "required": [
@@ -21721,7 +21653,7 @@
       ],
       "additionalProperties": false
      },
-     "description": "The items the change applies to, with what they renew at."
+     "description": "The items that change, and what they renew at."
     },
     "effective_at": {
      "anyOf": [
@@ -21732,7 +21664,7 @@
        "type": "null"
       }
      ],
-     "description": "When the change takes effect, as a Unix timestamp in milliseconds."
+     "description": "When the change takes effect."
     }
    },
    "required": [
@@ -21754,7 +21686,7 @@
    "type": "object",
    "properties": {
     "shipping_rate": {
-     "description": "The shipping rate the amount was quoted from, if any.",
+     "description": "The shipping rate the amount came from.",
      "type": [
       "string",
       "null"
@@ -21808,7 +21740,7 @@
      "description": "The tax's name."
     },
     "percentage": {
-     "description": "The tax rate as a percentage, or `null` for a tax without a rate.",
+     "description": "The tax rate as a percentage.",
      "type": [
       "number",
       "null"
@@ -21877,7 +21809,7 @@
     "square_meter",
     "square_foot"
    ],
-   "description": "The unit a quantity counts."
+   "description": "The unit a quantity counts, such as hours or kilograms."
   },
   "UpcomingInvoice": {
    "type": "object",
@@ -21889,7 +21821,7 @@
     },
     "live": {
      "type": "boolean",
-     "description": "`true` if the object is live, or `false` if it's in a sandbox."
+     "description": "Whether the object belongs to a live environment."
     },
     "customer": {
      "description": "The customer who will be billed.",
@@ -21906,7 +21838,7 @@
      "$ref": "InvoiceCollectionMethod"
     },
     "default_payment_method": {
-     "description": "The subscription's payment method.",
+     "description": "The subscription's saved payment method, charged in place of the customer's `default_payment_method`.",
      "type": [
       "string",
       "null"
@@ -21921,7 +21853,7 @@
        "type": "null"
       }
      ],
-     "description": "For invoices collected with `send_invoice`, the number of days the customer will have to pay."
+     "description": "The number of days the customer will have to pay the invoice they're sent."
     },
     "period": {
      "$ref": "UpcomingInvoicePeriod"
@@ -21935,7 +21867,7 @@
        "type": "null"
       }
      ],
-     "description": "When the invoice is expected to be charged, as a Unix timestamp in milliseconds."
+     "description": "When the invoice is expected to be charged."
     },
     "shipping_details": {
      "anyOf": [
@@ -21993,11 +21925,11 @@
     },
     "balance_applied": {
      "type": "integer",
-     "description": "How much of the customer's balance, after any `proration` credit, the renewal would apply."
+     "description": "The customer balance the renewal would apply, after any `proration` credit."
     },
     "amount_billed": {
      "type": "integer",
-     "description": "What the renewal would bill: `total` less `balance_applied`."
+     "description": "The amount the renewal would bill, after `balance_applied`."
     },
     "proration": {
      "anyOf": [
@@ -22068,21 +22000,21 @@
        "type": "null"
       }
      ],
-     "description": "The unit amount in whole cents, or `null` when it has a fraction of a cent."
+     "description": "The price per unit in whole cents."
     },
     "unit_amount_decimal": {
      "type": "string",
      "description": "The unit amount in cents as a decimal string with up to six decimal places, such as `\"0.35\"`."
     },
     "price": {
-     "description": "The catalog price the line bills, if any.",
+     "description": "The catalog price the line bills.",
      "type": [
       "string",
       "null"
      ]
     },
     "product": {
-     "description": "The product the line bills, if any.",
+     "description": "The product the line bills.",
      "type": [
       "string",
       "null"
@@ -22131,7 +22063,7 @@
      "$ref": "UpcomingInvoicePeriod"
     },
     "subscription_item": {
-     "description": "The subscription item the line bills, if any.",
+     "description": "The subscription item the line bills.",
      "type": [
       "string",
       "null"
@@ -22161,11 +22093,11 @@
    "properties": {
     "start": {
      "type": "integer",
-     "description": "Start of the billed period, as a Unix timestamp in milliseconds."
+     "description": "Start of the billed period."
     },
     "end": {
      "type": "integer",
-     "description": "End of the billed period, as a Unix timestamp in milliseconds."
+     "description": "End of the billed period."
     }
    },
    "required": [
@@ -22179,7 +22111,7 @@
    "properties": {
     "proration_at": {
      "type": "integer",
-     "description": "When the change is prorated from, as a Unix timestamp in milliseconds."
+     "description": "When the change is prorated from."
     },
     "credit_lines": {
      "type": "array",
@@ -22289,11 +22221,11 @@
     },
     "balance_applied": {
      "type": "integer",
-     "description": "How much of the customer's balance, including this change's credit, the plan-change invoice would apply."
+     "description": "The customer balance the plan-change invoice would apply, including this change's credit."
     },
     "amount_billed": {
      "type": "integer",
-     "description": "What the plan-change invoice would bill now: `charge_total` less `balance_applied`."
+     "description": "The amount the plan-change invoice would bill now, after `balance_applied`."
     }
    },
    "required": [
@@ -22317,7 +22249,7 @@
      "description": "The object's type."
     },
     "id": {
-     "description": "Unique identifier for the object.",
+     "description": "The object's unique identifier.",
      "type": "string"
     },
     "created_at": {
@@ -22348,7 +22280,7 @@
      ]
     },
     "fingerprint": {
-     "description": "Identifies the routing and account number.",
+     "description": "Identifies the routing and account number, so you can tell when the same bank account is used again.",
      "type": [
       "string",
       "null"
@@ -22394,6 +22326,7 @@
     },
     "account_holder_type": {
      "description": "Whether the account belongs to a person or a business.",
+     "default": "individual",
      "type": "string",
      "enum": [
       "individual",
